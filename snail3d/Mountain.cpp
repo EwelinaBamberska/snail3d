@@ -1,13 +1,13 @@
 #include "Mountain.h"
 
-Mountain::Mountain(GLuint t) {
-	M = glm::mat4(1.0f);
-	M = glm::translate(M, glm::vec3(0.0f, -0.5f, 0.0f));
-	mountainObj = new OBJloader();
-	mountainObj->loadOBJ("models/ground.obj");
-	tex = t;
+Mountain::Mountain(GLuint t, char *objFileName) : DrawableElement(t, objFileName) {
+	//M = glm::mat4(1.0f);
+	M = glm::translate(M, glm::vec3(0.0f, -1.5f, 0.0f));
+	//modelObj = new OBJloader();
+	//mountainObj->loadOBJ("models/ground.obj");
+	//tex = t;
 }
-
+/*
 void Mountain::drawSolid() {
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -26,7 +26,7 @@ void Mountain::drawSolid() {
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(3);
-}
+} */
 
 void Mountain::drawMountain() {
 	// make transformations for bullet
@@ -37,8 +37,10 @@ void Mountain::drawMountain() {
 
 	//glUniform4f(spLambert->u("color"), 0, 1, 0, 1);
 	//glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(M));
-
+	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
+	drawTextured();
 	//drawSolid();
+	/*
 	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
 
 	glEnableVertexAttribArray(spTextured->a("vertex"));
@@ -54,6 +56,6 @@ void Mountain::drawMountain() {
 	glDrawArrays(GL_TRIANGLES, 0, mountainObj->getVNumber());
 
 	glDisableVertexAttribArray(spTextured->a("vertex"));
-	glDisableVertexAttribArray(spTextured->a("texCoord"));
+	glDisableVertexAttribArray(spTextured->a("texCoord")); */
 
 }

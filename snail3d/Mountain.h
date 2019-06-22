@@ -13,18 +13,19 @@
 
 #include "allmodels.h"
 #include "OBJloader.h"
+#include "DrawableElement.h"
 
-class Mountain
+class Mountain : public DrawableElement
 {
 public:
-	Mountain(GLuint t);
+	Mountain(GLuint t, char *objFileName);
 	void drawMountain();
-	void drawSolid();
+	//void drawSolid();
 
 private:
-	OBJloader*  mountainObj;
-	glm::mat4 M;
-	GLuint tex;
+	//OBJloader*  mountainObj;
+	//glm::mat4 M;
+	//GLuint tex;
 };
 
 

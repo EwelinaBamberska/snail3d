@@ -193,8 +193,12 @@ int main(void)
 	glfwSetTime(0); //Zeruj timer
 	
 	Camera* camera = new Camera();
-	Mountain* mountain = new Mountain(mountainTex);
-	Snail* snail = new Snail(camera, snailTex, bazookaTex, bulletTex);//, spLambert);
+
+
+	char mountainName[] = "models/mountain.obj";
+	char snailName[] = "models/snail.obj";
+	Mountain* mountain = new Mountain(mountainTex, mountainName);
+	Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex);//, spLambert);
 	StrengthBar* strenghBar = new StrengthBar(camera);
 	
 	while (!glfwWindowShouldClose(window)) //Tak d�ugo jak okno nie powinno zosta� zamkni�te

@@ -16,19 +16,19 @@
 #include "OBJloader.h"
 
 
-class Bazooka
+class Bazooka : public DrawableElement
 {
 public:
-	Bazooka(GLuint bazookaT, GLuint bulletT);
+	Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName);
 	void drawBazooka(float z, glm::mat4 M);
-	void drawSolid();
+	//void drawSolid();
 
 private:
 	float angle;
-	glm::mat4 M;
-	OBJloader* bazookaObj;
+	//glm::mat4 M;
+	//OBJloader* bazookaObj;
 	Bullet* bullet;
-	GLuint tex;
+	//GLuint tex;
 };
 
 #endif

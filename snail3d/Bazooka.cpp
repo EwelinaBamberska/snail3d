@@ -1,14 +1,16 @@
 #include "Bazooka.h"
 
-Bazooka::Bazooka(GLuint bazookaT, GLuint bulletT) {
+Bazooka::Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName) : DrawableElement(bazookaT, objFileName) {
 	angle = 0.0f;
-	bazookaObj = new OBJloader();
-	bazookaObj->loadOBJ("models/bazooka.obj");
-	M = glm::mat4(1.0f);
-	bullet = new Bullet(bulletT);
-	tex = bazookaT;
-}
+	//bazookaObj = new OBJloader();
+	//bazookaObj->loadOBJ("models/bazooka.obj");
+	//M = glm::mat4(1.0f);
 
+	char name[] = "models/bullet.obj";
+	bullet = new Bullet(bulletT, name);
+	//tex = bazookaT;
+}
+/*
 void Bazooka::drawSolid() { 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -29,7 +31,7 @@ void Bazooka::drawSolid() {
 	glDisableVertexAttribArray(3);
 
 	
-}
+}*/
 
 void Bazooka::drawBazooka(float z, glm::mat4 snailM) {
 	angle += z;
@@ -45,11 +47,7 @@ void Bazooka::drawBazooka(float z, glm::mat4 snailM) {
 	//glUniform4f(spLambert->u("color"), 1, 1, 0, 1);
 	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
 
-	//drawSolid(); //draw model
-
-	// draw bullet
-	//bullet->drawBullet(M);
-
+	/*
 	glEnableVertexAttribArray(spTextured->a("vertex"));
     glVertexAttribPointer(spTextured->a("vertex"),4,GL_FLOAT,false,0, bazookaObj->get_vertices());
 
@@ -63,7 +61,7 @@ void Bazooka::drawBazooka(float z, glm::mat4 snailM) {
     glDrawArrays( GL_TRIANGLES, 0, bazookaObj->getVNumber());
 
     glDisableVertexAttribArray(spTextured->a("vertex"));
-    glDisableVertexAttribArray(spTextured->a("texCoord"));
-
+    glDisableVertexAttribArray(spTextured->a("texCoord"));*/
+	drawTextured();
 	bullet->drawBullet(M);
 }

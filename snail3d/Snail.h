@@ -18,12 +18,13 @@
 #include "AABBObject.h"
 #include "Bazooka.h"
 #include "Mountain.h"
+#include "DrawableElement.h"
 
 #include <iostream>
-class Snail
+class Snail : public DrawableElement
 {
 public:
-	Snail(Camera* c, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex);// ShaderProgram* s);
+	Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex);// ShaderProgram* s);
 	virtual ~Snail();
 	void moveSnail(float angle_x, float angle_y, float move_up);
 	void draw(float z);
@@ -37,12 +38,12 @@ protected:
 
 private:
 	Bazooka* bazooka;
-	OBJloader* snailObj;
-	glm::mat4 M;
+	//OBJloader* snailObj;
+	//glm::mat4 M;
 	Camera* camera;
 	void drawSolid();
 	AABBObject* aabb;
-	GLuint tex;
+	//GLuint tex;
 
 
 };

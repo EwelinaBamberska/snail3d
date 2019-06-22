@@ -13,18 +13,20 @@
 
 #include "allmodels.h"
 #include "OBJloader.h"
+#include "DrawableElement.h"
 
-class Bullet
+class Bullet : public DrawableElement
 {
 public:
-	Bullet(GLuint t);
+	Bullet(GLuint t, char* objFileName);
 	void drawBullet(glm::mat4 M);
-	void drawSolid();
+	//void drawSolid();
+	//void drawTextured();
 
 private:
-	OBJloader* bulletObj;
-	glm::mat4 M;
-	GLuint tex;
+	//OBJloader* modelObj;
+	//glm::mat4 M;
+	//GLuint tex;
 };
 
 #endif

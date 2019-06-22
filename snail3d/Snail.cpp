@@ -2,16 +2,18 @@
 
 
 
-Snail::Snail(Camera* c, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex)// , ShaderProgram* s)
+Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex) : DrawableElement(snailTex, objFileName)
 {
 	//spLambert = s;
-    M = glm::mat4(1.0f);
+   // M = glm::mat4(1.0f);
     camera = c;
-    snailObj = new OBJloader();
-    snailObj->loadOBJ("models/snail.obj");
+    //snailObj = new OBJloader();
+    //snailObj->loadOBJ("models/snail.obj");
     aabb = new AABBObject();
-	bazooka = new Bazooka(bazookaTex, bulletTex);
-	tex = snailTex;
+
+	char name[] = "models/bazooka.obj";
+	bazooka = new Bazooka(bazookaTex, bulletTex, name);
+	//tex = snailTex;
 }
 
 
@@ -29,7 +31,7 @@ void Snail::rotateSnail(float x, float y, float z)
 {
     M = glm::rotate(M, x, glm::vec3(0.0f, -1.0f, 0.0f));
 }
-
+/*
 void Snail::drawSolid()
 {
     glEnableVertexAttribArray(0);
@@ -49,11 +51,7 @@ void Snail::drawSolid()
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
     glDisableVertexAttribArray(3); 
-}
-
-void dtawTextured() {
-
-}
+} */
 
 void Snail::draw(float z)
 {
@@ -68,7 +66,7 @@ void Snail::draw(float z)
 
 	mountain->drawMountain();*/
 
-    spTextured->use();
+    /*spTextured->use();
     glUniformMatrix4fv(spTextured->u("P"),1,false,glm::value_ptr(camera->getP()));
     glUniformMatrix4fv(spTextured->u("V"),1,false,glm::value_ptr(camera->getV()));
     glUniformMatrix4fv(spTextured->u("M"),1,false,glm::value_ptr(M));
@@ -87,7 +85,12 @@ void Snail::draw(float z)
 
     glDisableVertexAttribArray(spTextured->a("vertex"));
     glDisableVertexAttribArray(spTextured->a("texCoord"));
+	*/
 
+	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
+
+	initDrawing(camera->getP(), camera->getV());
+	drawTextured();
 
 	bazooka->drawBazooka(z, M);
 
@@ -104,8 +107,8 @@ void Snail::draw(float z)
 
 void Snail::setBoxes()
 {
-    int n_vertices = snailObj->getVNumber() * 4;
-    float* verts = snailObj->get_vertices();
+    int n_vertices = modelObj->getVNumber() * 4;
+    float* verts = modelObj->get_vertices();
     float x1 = verts[0], y1 = verts[1], z1 = verts[2]; //min
     float x2 = verts[0], y2 = verts[1], z2 = verts[2]; //max
 
