@@ -24,21 +24,25 @@
 class Snail : public DrawableElement
 {
 public:
-	Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex);
+	Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool turn);
+	Snail();
 	virtual ~Snail();
 	void moveSnail(float angle_x, float angle_y, float move_up);
 	void draw(float z);
 	void rotateSnail(float angle_x, float angly_y, float z);
 	void setBoxes();
 	AABBObject* getaabb();
+	bool getTurn();
+	void setTurn(bool t);
+	void setRandomCoords();
 
 protected:
 
 private:
 	Bazooka* bazooka;
 	Camera* camera;
-	void drawSolid();
 	AABBObject* aabb;
+	bool turn;
 };
 
 #endif

@@ -36,6 +36,7 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "AABBObject.h"
 #include "StrengthBar.h"
 #include "Mountain.h"
+#include <vector>
 
 float speed_x = 0;
 float speed_y = 0;
@@ -138,10 +139,17 @@ void freeOpenGLProgram(GLFWwindow* window) {
 
 
 //Procedura rysuj�ca zawarto�� sceny
-void drawScene(GLFWwindow* window, Snail* snail, StrengthBar* bar, Mountain* mountain) {
+void drawScene(GLFWwindow* window, Snail* snail, StrengthBar* bar, Mountain* mountain, std::vector<Snail*> snails) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	snail->moveSnail(speed_x, speed_y, speed_up);
+	for (int i = 0; i < snails.size(); i++) {
+		snails[i]->draw(speed_up);
+	}
+
+	if (snail->getTurn() == true) {
+		snail->moveSnail(speed_x, speed_y, speed_up);
+	}
+
 	snail->draw(speed_up);
 	mountain->drawMountain();
 
@@ -197,8 +205,18 @@ int main(void)
 
 	char mountainName[] = "models/mountain.obj";
 	char snailName[] = "models/snail.obj";
+
+	int numberOfSnails = 5, i = 0;
+	std::vector<Snail*> snails;
+
+	for (i = 0; i < numberOfSnails; i++) {
+		//snails.push_back new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);
+		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false));
+		snails[snails.size() - 1]->setRandomCoords();
+	}
+
 	Mountain* mountain = new Mountain(mountainTex, mountainName);
-	Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex);//, spLambert);
+	Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);//, spLambert);
 	StrengthBar* strenghBar = new StrengthBar(camera);
 	
 	while (!glfwWindowShouldClose(window)) //Tak d�ugo jak okno nie powinno zosta� zamkni�te
@@ -206,7 +224,7 @@ int main(void)
 		//angle_x += speed_x * glfwGetTime(); //Zwi�ksz/zmniejsz k�t obrotu na podstawie pr�dko�ci i czasu jaki up�yna� od poprzedniej klatki
 		//angle_y += speed_y * glfwGetTime(); //Zwi�ksz/zmniejsz k�t obrotu na podstawie pr�dko�ci i czasu jaki up�yna� od poprzedniej klatki
 		glfwSetTime(0); //Zeruj timer
-		drawScene(window, snail, strenghBar, mountain); //Wykonaj procedur� rysuj�c�
+		drawScene(window, snail, strenghBar, mountain, snails); //Wykonaj procedur� rysuj�c�
 		glfwPollEvents(); //Wykonaj procedury callback w zalezno�ci od zdarze� jakie zasz�y.
 	}
 

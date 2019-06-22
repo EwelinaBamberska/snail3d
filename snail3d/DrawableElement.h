@@ -18,6 +18,7 @@ class DrawableElement
 {
 public:
 	DrawableElement(GLuint t , char* objFileName);
+	DrawableElement();
 	void drawSolid();
 	void drawTextured();
 	void initTextureDrawing(glm::mat4 P, glm::mat4 V);

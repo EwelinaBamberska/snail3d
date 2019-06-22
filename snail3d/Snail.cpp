@@ -2,24 +2,31 @@
 
 
 
-Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex) : DrawableElement(snailTex, objFileName)
+Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool tur) : DrawableElement(snailTex, objFileName)
 {
     camera = c;
     aabb = new AABBObject();
 
 	char name[] = "models/bazooka.obj";
 	bazooka = new Bazooka(bazookaTex, bulletTex, name);
+	turn = tur;
 }
 
+Snail::Snail() : DrawableElement() {}
+
+void Snail::setRandomCoords() {
+	M = glm::translate(M, glm::vec3(4.0f, 0.0f, 4.0f));
+	M = glm::rotate(M, 2*PI, glm::vec3(0.0f, -1.0f, 0.0f));
+}
 
 void Snail::moveSnail(float x, float y, float z)
 {
-    x = 0.002f * x;
-    y = 0.001f * y ;
-    rotateSnail(x, y, z);
+	x = 0.002f * x;
+	y = 0.001f * y;
+	rotateSnail(x, y, z);
 
-    M = glm::translate(M, glm::vec3(0.0f, 0.0f, 1.0f * y)); //Compute model matrix
-    aabb->setz(aabb->getmins()[2] + 1.0f * y, aabb->getmaxes()[2] + 1.0f * y);
+	M = glm::translate(M, glm::vec3(0.0f, 0.0f, 1.0f * y)); //Compute model matrix
+	aabb->setz(aabb->getmins()[2] + 1.0f * y, aabb->getmaxes()[2] + 1.0f * y);
 }
 
 void Snail::rotateSnail(float x, float y, float z)
@@ -67,6 +74,14 @@ void Snail::setBoxes()
 
     aabb->setmins(x1, y1, z1);
     aabb->setmaxes(x2, y2, z2);
+}
+
+bool Snail::getTurn() {
+	return turn;
+}
+
+void Snail::setTurn(bool t) {
+	turn = t;
 }
 
 AABBObject* Snail::getaabb()
