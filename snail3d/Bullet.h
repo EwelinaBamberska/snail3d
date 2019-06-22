@@ -20,13 +20,8 @@ class Bullet : public DrawableElement
 public:
 	Bullet(GLuint t, char* objFileName);
 	void drawBullet(glm::mat4 M);
-	//void drawSolid();
-	//void drawTextured();
 
 private:
-	//OBJloader* modelObj;
-	//glm::mat4 M;
-	//GLuint tex;
 };
 
 #endif

@@ -21,14 +21,10 @@ class Bazooka : public DrawableElement
 public:
 	Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName);
 	void drawBazooka(float z, glm::mat4 M);
-	//void drawSolid();
 
 private:
 	float angle;
-	//glm::mat4 M;
-	//OBJloader* bazookaObj;
 	Bullet* bullet;
-	//GLuint tex;
 };
 
 #endif

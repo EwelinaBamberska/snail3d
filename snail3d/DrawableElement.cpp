@@ -34,7 +34,6 @@ void DrawableElement::initDrawing(glm::mat4 P, glm::mat4 V) {
 }
 
 void DrawableElement::drawTextured() {
-	//glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
 
 	glEnableVertexAttribArray(spTextured->a("vertex"));
 	glVertexAttribPointer(spTextured->a("vertex"), 4, GL_FLOAT, false, 0, modelObj->get_vertices());

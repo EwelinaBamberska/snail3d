@@ -21,4 +21,4 @@ private:
 	glm::mat4 P;
 };
 
-#endif // CAMERA_H
+#endif

@@ -20,12 +20,8 @@ class Mountain : public DrawableElement
 public:
 	Mountain(GLuint t, char *objFileName);
 	void drawMountain();
-	//void drawSolid();
 
 private:
-	//OBJloader*  mountainObj;
-	//glm::mat4 M;
-	//GLuint tex;
 };
 
 
