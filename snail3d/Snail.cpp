@@ -4,16 +4,11 @@
 
 Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex) : DrawableElement(snailTex, objFileName)
 {
-	//spLambert = s;
-   // M = glm::mat4(1.0f);
     camera = c;
-    //snailObj = new OBJloader();
-    //snailObj->loadOBJ("models/snail.obj");
     aabb = new AABBObject();
 
 	char name[] = "models/bazooka.obj";
 	bazooka = new Bazooka(bazookaTex, bulletTex, name);
-	//tex = snailTex;
 }
 
 
@@ -31,77 +26,19 @@ void Snail::rotateSnail(float x, float y, float z)
 {
     M = glm::rotate(M, x, glm::vec3(0.0f, -1.0f, 0.0f));
 }
-/*
-void Snail::drawSolid()
-{
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-
-
-    glVertexAttribPointer(0,4,GL_FLOAT,false,0,snailObj->get_vertices());
-    glVertexAttribPointer(1,4,GL_FLOAT,false,0,snailObj->get_normals());
-    glVertexAttribPointer(2,2,GL_FLOAT,false,0,snailObj->get_texCoords());
-    glVertexAttribPointer(3,4,GL_FLOAT,false,0,snailObj->get_colors());
-
-    glDrawArrays(GL_TRIANGLES,0,snailObj->getVNumber());
-
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
-    glDisableVertexAttribArray(3); 
-} */
 
 void Snail::draw(float z)
 {
 	z = 0.1 * z;
-    /*spLambert->use();
-    glUniform4f(spLambert->u("color"),0,1,0,1);
-    glUniformMatrix4fv(spLambert->u("P"),1,false,glm::value_ptr(camera->getP()));
-    glUniformMatrix4fv(spLambert->u("V"),1,false,glm::value_ptr(camera->getV()));
-    glUniformMatrix4fv(spLambert->u("M"),1,false,glm::value_ptr(M));
-    drawSolid();
-    bazooka->drawBazooka(z, M); 
-
-	mountain->drawMountain();*/
-
-    /*spTextured->use();
-    glUniformMatrix4fv(spTextured->u("P"),1,false,glm::value_ptr(camera->getP()));
-    glUniformMatrix4fv(spTextured->u("V"),1,false,glm::value_ptr(camera->getV()));
-    glUniformMatrix4fv(spTextured->u("M"),1,false,glm::value_ptr(M));
-
-    glEnableVertexAttribArray(spTextured->a("vertex"));
-    glVertexAttribPointer(spTextured->a("vertex"),4,GL_FLOAT,false,0, snailObj->get_vertices());
-
-    glEnableVertexAttribArray(spTextured->a("texCoord"));
-    glVertexAttribPointer(spTextured->a("texCoord"),2,GL_FLOAT,false,0, snailObj->get_texCoords());
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D,tex);
-    glUniform1i(spLambertTextured->u("tex"),0);
-
-    glDrawArrays( GL_TRIANGLES, 0, snailObj->getVNumber());
-
-    glDisableVertexAttribArray(spTextured->a("vertex"));
-    glDisableVertexAttribArray(spTextured->a("texCoord"));
-	*/
 
 	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
 
-	initDrawing(camera->getP(), camera->getV());
-	drawTextured();
-
-	bazooka->drawBazooka(z, M);
-
 	// for solids
-	/*spLambert->use();
-	glUniform4f(spLambert->u("color"), 0, 1, 0, 1);
-	glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(camera->getP()));
-	glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(camera->getV()));
-	glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(M));*/
+	//initSolidDrawing(camera->getP(), camera->getV());
 
-	//mountain->drawMountain();
+	initTextureDrawing(camera->getP(), camera->getV());
+	drawTextured();
+	bazooka->drawBazooka(z, M);
 
 }
 

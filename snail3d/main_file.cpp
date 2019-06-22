@@ -118,10 +118,10 @@ void initOpenGLProgram(GLFWwindow* window) {
 	glfwSetWindowSizeCallback(window, windowResizeCallback);
 	glfwSetKeyCallback(window, keyCallback);
 
-	bazookaTex = readTexture("models/bazooka_tex.jpg");
-	bulletTex = readTexture("models/bullet_tex.jpg");
 	snailTex = readTexture("models/t0080_0.png");
 	mountainTex = readTexture("models/mountain_tex.png");
+	bazookaTex = readTexture("models/bazooka_tex.png");
+	bulletTex = readTexture("models/bullet_tex.png");
 }
 
 //Release resources allocated by the program

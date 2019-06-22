@@ -21,7 +21,8 @@ void Bazooka::drawBazooka(float z, glm::mat4 snailM) {
 
 	// draw
 	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
-
+	//drawSolid();
+	//glUniform4f(spLambert->u("color"), 0.5, 0.5, 0.5, 1);
 	drawTextured();
 	bullet->drawBullet(M);
 }

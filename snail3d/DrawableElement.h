@@ -20,7 +20,8 @@ public:
 	DrawableElement(GLuint t , char* objFileName);
 	void drawSolid();
 	void drawTextured();
-	void initDrawing(glm::mat4 P, glm::mat4 V);
+	void initTextureDrawing(glm::mat4 P, glm::mat4 V);
+	void initSolidDrawing(glm::mat4 P, glm::mat4 V);
 
 protected: 
 	OBJloader* modelObj;

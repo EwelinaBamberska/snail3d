@@ -27,10 +27,16 @@ void DrawableElement::drawSolid() {
 	glDisableVertexAttribArray(3);
 }
 
-void DrawableElement::initDrawing(glm::mat4 P, glm::mat4 V) {
+void DrawableElement::initTextureDrawing(glm::mat4 P, glm::mat4 V) {
 	spTextured->use();
 	glUniformMatrix4fv(spTextured->u("P"), 1, false, glm::value_ptr(P));
 	glUniformMatrix4fv(spTextured->u("V"), 1, false, glm::value_ptr(V));
+}
+
+void DrawableElement::initSolidDrawing(glm::mat4 P, glm::mat4 V) {
+	spLambert->use();
+	glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(P));
+	glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(V));
 }
 
 void DrawableElement::drawTextured() {
