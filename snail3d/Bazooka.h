@@ -1,5 +1,5 @@
-#pragma once
-#include "constants.h"
+#ifndef BAZOOKA_H
+#define BAZOOKA_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,19 +10,25 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "shaderprogram.h"
-#include "lodepng.h"
+
 #include "allmodels.h"
-#include "Camera.h"
+#include "Bullet.h"
+#include "OBJloader.h"
+
 
 class Bazooka
 {
 public:
-	Bazooka(Camera* c);
+	Bazooka(GLuint bazookaT, GLuint bulletT);
 	void drawBazooka(float z, glm::mat4 M);
-	~Bazooka();
+	void drawSolid();
+
 private:
-	float angleOfBazooka = 0;
-	glm::mat4 bazookaM;
-	Camera* camera;
+	float angle;
+	glm::mat4 M;
+	OBJloader* bazookaObj;
+	Bullet* bullet;
+	GLuint tex;
 };
 
+#endif

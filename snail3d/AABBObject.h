@@ -27,10 +27,6 @@ public:
 	float* getmaxes();
 	float* getmins();
 	bool check_if_collision(AABBObject* object);
-	void sety(float minx, float maxx);	
-	void setx(float minx, float maxx);
-
-
 protected:
 
 private:

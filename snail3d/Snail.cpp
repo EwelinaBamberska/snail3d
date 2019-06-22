@@ -2,7 +2,7 @@
 
 
 
-Snail::Snail(Camera* c, GLuint t)// , ShaderProgram* s)
+Snail::Snail(Camera* c, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex)// , ShaderProgram* s)
 {
 	//spLambert = s;
     M = glm::mat4(1.0f);
@@ -10,28 +10,23 @@ Snail::Snail(Camera* c, GLuint t)// , ShaderProgram* s)
     snailObj = new OBJloader();
     snailObj->loadOBJ("models/snail.obj");
     aabb = new AABBObject();
-	tex = t;
-	bazooka = new Bazooka(camera);
+	bazooka = new Bazooka(bazookaTex, bulletTex);
+	tex = snailTex;
 }
 
 
-void Snail::moveSnail(float y)
+void Snail::moveSnail(float x, float y, float z)
 {
+    x = 0.002f * x;
+    y = 0.001f * y ;
+    rotateSnail(x, y, z);
+
     M = glm::translate(M, glm::vec3(0.0f, 0.0f, 1.0f * y)); //Compute model matrix
-	//aabb->setz(aabb->getmins()[2] + 1.0f * y, aabb->getmaxes()[2] + 1.0f * y);
-	
-	float oldmin = sqrt(pow(aabb->getmins()[1], 2) - pow(aabb->getmins()[2], 2));
-	float oldmax = sqrt(pow(aabb->getmaxes()[1], 2) - pow(aabb->getmaxes()[2], 2));
-    aabb->setz(aabb->getmins()[2] + cos(angleOfSnail * PI / 180) * (y), aabb->getmaxes()[2] + cos(angleOfSnail * PI / 180) * (y));
-	aabb->sety(aabb->getmins()[1] + sin(angleOfSnail * PI / 180) * (y), aabb->getmaxes()[1] + sin(angleOfSnail * PI / 180) * (y));
+    aabb->setz(aabb->getmins()[2] + 1.0f * y, aabb->getmaxes()[2] + 1.0f * y);
 }
 
-void Snail::rotateSnail(float x)
+void Snail::rotateSnail(float x, float y, float z)
 {
-	angleOfSnail += x / ( 2.0 * PI * 6.25);
-	if (angleOfSnail > 360)	angleOfSnail -= 360;
-	else if (angleOfSnail < -360)	angleOfSnail += 360;
-	x = x / (2.0 * PI * 360.0);
     M = glm::rotate(M, x, glm::vec3(0.0f, -1.0f, 0.0f));
 }
 
@@ -53,48 +48,58 @@ void Snail::drawSolid()
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
-    glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(3); 
 }
 
-void Snail::drawBazooka(float z){
-	bazooka->drawBazooka(z, M);
+void dtawTextured() {
+
 }
 
-void Snail::draw()
+void Snail::draw(float z)
 {
-	/*z = 0.05 * z;
-    spLambert->use();
+	z = 0.1 * z;
+    /*spLambert->use();
     glUniform4f(spLambert->u("color"),0,1,0,1);
     glUniformMatrix4fv(spLambert->u("P"),1,false,glm::value_ptr(camera->getP()));
     glUniformMatrix4fv(spLambert->u("V"),1,false,glm::value_ptr(camera->getV()));
     glUniformMatrix4fv(spLambert->u("M"),1,false,glm::value_ptr(M));
-    drawSolid();*/
-    //drawBazooka(z);
+    drawSolid();
+    bazooka->drawBazooka(z, M); 
 
+	mountain->drawMountain();*/
 
-    int vertexCount = snailObj->getVNumber();
-    float* verts = snailObj->get_vertices();
-    float* texCoords = snailObj->get_texCoords();
     spTextured->use();
     glUniformMatrix4fv(spTextured->u("P"),1,false,glm::value_ptr(camera->getP()));
     glUniformMatrix4fv(spTextured->u("V"),1,false,glm::value_ptr(camera->getV()));
     glUniformMatrix4fv(spTextured->u("M"),1,false,glm::value_ptr(M));
 
     glEnableVertexAttribArray(spTextured->a("vertex"));
-    glVertexAttribPointer(spTextured->a("vertex"),4,GL_FLOAT,false,0,verts);
+    glVertexAttribPointer(spTextured->a("vertex"),4,GL_FLOAT,false,0, snailObj->get_vertices());
 
     glEnableVertexAttribArray(spTextured->a("texCoord"));
-    glVertexAttribPointer(spTextured->a("texCoord"),2,GL_FLOAT,false,0,texCoords);
+    glVertexAttribPointer(spTextured->a("texCoord"),2,GL_FLOAT,false,0, snailObj->get_texCoords());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,tex);
     glUniform1i(spLambertTextured->u("tex"),0);
 
-    glDrawArrays( GL_TRIANGLES, 0, vertexCount );
+    glDrawArrays( GL_TRIANGLES, 0, snailObj->getVNumber());
 
     glDisableVertexAttribArray(spTextured->a("vertex"));
     glDisableVertexAttribArray(spTextured->a("texCoord"));
-	
+
+
+	bazooka->drawBazooka(z, M);
+
+	// for solids
+	/*spLambert->use();
+	glUniform4f(spLambert->u("color"), 0, 1, 0, 1);
+	glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(camera->getP()));
+	glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(camera->getV()));
+	glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(M));*/
+
+	//mountain->drawMountain();
+
 }
 
 void Snail::setBoxes()
@@ -127,14 +132,6 @@ void Snail::setBoxes()
 AABBObject* Snail::getaabb()
 {
     return aabb;
-}
-
-glm::mat4 Snail::getM() {
-	return M;
-}
-
-Bazooka* Snail::getBazooka() {
-	return bazooka;
 }
 
 
