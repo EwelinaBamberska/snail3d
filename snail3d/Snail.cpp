@@ -36,7 +36,8 @@ void Snail::rotateSnail(float x, float y, float z)
 
 void Snail::draw(float z)
 {
-	z = 0.1 * z;
+	//z = 0.1 * z;
+	z = turn == true ? 0.1 * z : 0;
 
 	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
 
