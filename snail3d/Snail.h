@@ -19,6 +19,7 @@
 #include "Bazooka.h"
 #include "Mountain.h"
 #include "DrawableElement.h"
+#include "Utils.h"
 
 #include <iostream>
 class Snail : public DrawableElement
