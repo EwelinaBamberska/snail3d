@@ -7,8 +7,6 @@ DrawableElement::DrawableElement(GLuint t, char *objFileName) {
 	tex = t;
 }
 
-DrawableElement::DrawableElement() {}
-
 void DrawableElement::drawSolid() {
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);

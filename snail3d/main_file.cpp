@@ -43,6 +43,8 @@ float speed_y = 0;
 float speed_up = 0;
 float aspectRatio = 1;
 float strength = 0;
+bool changeActiveSnail = false;
+int numberOfSnails = 5;
 
 //ShaderProgram *spLambert;
 
@@ -77,6 +79,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		if (key == GLFW_KEY_UP) speed_up = 0;
 		if (key == GLFW_KEY_DOWN) speed_up = 0;
 		if (key == GLFW_KEY_SPACE) strength = 0;
+		if (key == GLFW_KEY_TAB) changeActiveSnail = true;
 	}
 }
 
@@ -135,25 +138,46 @@ void freeOpenGLProgram(GLFWwindow* window) {
 	glDeleteTextures(1, &mountainTex);
 }
 
-
+int getActiveSnailIndex(std::vector<Snail*> snails) {
+	for (int i = 0; i < snails.size(); i++) {
+		if (snails[i]->getTurn() == true) {
+			return i;
+		}
+	}
+}
 
 
 //Procedura rysuj�ca zawarto�� sceny
-void drawScene(GLFWwindow* window, Snail* snail, StrengthBar* bar, Mountain* mountain, std::vector<Snail*> snails) {
+void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::vector<Snail*> snails) { //  Snail* snail) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// na przycisk "TAB" zmien aktywnego slimaka
+	if (changeActiveSnail == true) {
+		changeActiveSnail = false;
+		int active = getActiveSnailIndex(snails);
+
+		snails[active]->setTurn(false);
+		snails[(active + 1) % 5]->setTurn(true);
+	}
+
+	// narysuj slimaki
 	for (int i = 0; i < snails.size(); i++) {
+		if (snails[i]->getTurn() == true) {
+			snails[i]->moveSnail(speed_x, speed_y, speed_up);
+		}
 		snails[i]->draw(speed_up);
 	}
 
-	if (snail->getTurn() == true) {
+	/*if (snail->getTurn() == true) {
 		snail->moveSnail(speed_x, speed_y, speed_up);
 	}
 
-	snail->draw(speed_up);
+	snail->draw(speed_up);*/
+
+	// narysuj gure
 	mountain->drawMountain();
 
-
+	// narysuj pasek sily
 	if (strength) {
 		bar->draw(strength);
 	}
@@ -206,17 +230,18 @@ int main(void)
 	char mountainName[] = "models/mountain.obj";
 	char snailName[] = "models/snail.obj";
 
-	int numberOfSnails = 5, i = 0;
+	int i = 0;
 	std::vector<Snail*> snails;
 
 	for (i = 0; i < numberOfSnails; i++) {
-		//snails.push_back new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);
 		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false));
-		snails[snails.size() - 1]->setRandomCoords();
+		snails[snails.size() - 1]->setRandomCoords(i);
 	}
 
+	snails[0]->setTurn(true);
+
 	Mountain* mountain = new Mountain(mountainTex, mountainName);
-	Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);//, spLambert);
+	//Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);//, spLambert);
 	StrengthBar* strenghBar = new StrengthBar(camera);
 	
 	while (!glfwWindowShouldClose(window)) //Tak d�ugo jak okno nie powinno zosta� zamkni�te
@@ -224,7 +249,7 @@ int main(void)
 		//angle_x += speed_x * glfwGetTime(); //Zwi�ksz/zmniejsz k�t obrotu na podstawie pr�dko�ci i czasu jaki up�yna� od poprzedniej klatki
 		//angle_y += speed_y * glfwGetTime(); //Zwi�ksz/zmniejsz k�t obrotu na podstawie pr�dko�ci i czasu jaki up�yna� od poprzedniej klatki
 		glfwSetTime(0); //Zeruj timer
-		drawScene(window, snail, strenghBar, mountain, snails); //Wykonaj procedur� rysuj�c�
+		drawScene(window, strenghBar, mountain, snails); // ,snail)		//Wykonaj procedur� rysuj�c�
 		glfwPollEvents(); //Wykonaj procedury callback w zalezno�ci od zdarze� jakie zasz�y.
 	}
 

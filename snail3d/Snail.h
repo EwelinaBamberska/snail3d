@@ -22,11 +22,14 @@
 #include "Utils.h"
 
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include <cstdio>
+
 class Snail : public DrawableElement
 {
 public:
 	Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool turn);
-	Snail();
 	virtual ~Snail();
 	void moveSnail(float angle_x, float angle_y, float move_up);
 	void draw(float z);
@@ -35,7 +38,7 @@ public:
 	AABBObject* getaabb();
 	bool getTurn();
 	void setTurn(bool t);
-	void setRandomCoords();
+	void setRandomCoords(int i);
 
 protected:
 

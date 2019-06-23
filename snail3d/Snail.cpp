@@ -12,10 +12,11 @@ Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, G
 	turn = tur;
 }
 
-Snail::Snail() : DrawableElement() {}
+void Snail::setRandomCoords(int i) {
+	float xcoord = -4.0f + randomFloat(0.0f, 8.0f);
+	float ycoord = -4.0f + randomFloat(0.0f, 8.0f);
 
-void Snail::setRandomCoords() {
-	M = glm::translate(M, glm::vec3(-4.0f + randomFloat(0.0f, 8.0f), 0.0f, -4.0f + randomFloat(0.0f, 8.0f)));
+	M = glm::translate(M, glm::vec3(xcoord, 0.0f, ycoord)));
 	M = glm::rotate(M, 2*PI * randomFloat(0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
