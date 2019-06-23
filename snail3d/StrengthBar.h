@@ -29,12 +29,15 @@ public:
 	void drawSolid();
 	void draw(float s);
 	void setLength(float l);
+	float getLength();
+	float getMaxLength();
 
 protected:
 
 private:
 	glm::mat4 M;
 	float length;
+	float maxLength;
 	Camera *camera;
 };
 

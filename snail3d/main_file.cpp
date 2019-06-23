@@ -45,6 +45,7 @@ float aspectRatio = 1;
 float strength = 0;
 bool changeActiveSnail = false;
 int numberOfSnails = 5;
+bool strengthReleased = false;
 
 //ShaderProgram *spLambert;
 
@@ -78,7 +79,10 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		if (key == GLFW_KEY_S) speed_y = 0;
 		if (key == GLFW_KEY_UP) speed_up = 0;
 		if (key == GLFW_KEY_DOWN) speed_up = 0;
-		if (key == GLFW_KEY_SPACE) strength = 0;
+		if (key == GLFW_KEY_SPACE) {
+			strength = 0;
+			strengthReleased = true;
+		}
 		if (key == GLFW_KEY_TAB) changeActiveSnail = true;
 	}
 }
@@ -151,13 +155,16 @@ int getActiveSnailIndex(std::vector<Snail*> snails) {
 void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::vector<Snail*> snails) { //  Snail* snail) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// indeks aktywnego slimaka
+	int active = getActiveSnailIndex(snails);
+
 	// na przycisk "TAB" zmien aktywnego slimaka
 	if (changeActiveSnail == true) {
 		changeActiveSnail = false;
-		int active = getActiveSnailIndex(snails);
 
 		snails[active]->setTurn(false);
 		snails[(active + 1) % 5]->setTurn(true);
+		active = (active + 1) % 5;
 	}
 
 	// narysuj slimaki
@@ -182,6 +189,10 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 		bar->draw(strength);
 	}
 	else {
+		if (strengthReleased) {
+			strengthReleased = false;
+			snails[active]->shootBullet(bar->getLength());
+		}
 		strength = 0;
 		bar->setLength(0);
 	}
@@ -225,8 +236,7 @@ int main(void)
 	glfwSetTime(0); //Zeruj timer
 	
 	Camera* camera = new Camera();
-
-	char mountainName[] = "models/mountain.obj";
+	char mountainName[] = "models/ground.obj";
 	char snailName[] = "models/snail.obj";
 
 	int i = 0;

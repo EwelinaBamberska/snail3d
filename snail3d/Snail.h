@@ -40,6 +40,8 @@ public:
 	bool getTurn();
 	void setTurn(bool t);
 	void setRandomCoords(int i);
+	void shootBullet(float strength);
+	void countShootingTrajectory(); // to do
 
 protected:
 
@@ -49,6 +51,15 @@ private:
 	AABBObject* aabb;
 	bool turn;
 	Pointer* pointer;
+	float HP;
+
+	// shooting variables
+	bool shooting;
+	int yShooting;
+	int xShooting;
+	float angleShooting;
+	float timeShooting;
+	float speedShooting;
 };
 
 #endif

@@ -21,6 +21,7 @@ class Bazooka : public DrawableElement
 public:
 	Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName);
 	void drawBazooka(float z, glm::mat4 M);
+	float getAngle();
 
 private:
 	float angle;

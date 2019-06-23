@@ -5,6 +5,7 @@ StrengthBar::StrengthBar(Camera *c)
 	//ctor
 	camera = c;
 	M = glm::mat4(1.0f);
+	maxLength = 100.0f;
 }
 
 void StrengthBar::drawSolid()
@@ -32,7 +33,7 @@ void StrengthBar::draw(float s)
 {
 	if(s)
 	length += s;
-	if (length > 100)	length = 0;
+	if (length > maxLength)	length = 0.0f;
 	spLambert->use();
 	glUniform4f(spLambert->u("color"), 1, 0, 0, 1);
 
@@ -50,6 +51,14 @@ void StrengthBar::setLength(float l) {
 
 void StrengthBar::loadCube() {
 
+}
+
+float StrengthBar::getLength() {
+	return length;
+}
+
+float StrengthBar::getMaxLength() {
+	return maxLength;
 }
 
 StrengthBar::~StrengthBar()

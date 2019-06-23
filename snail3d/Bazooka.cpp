@@ -26,3 +26,7 @@ void Bazooka::drawBazooka(float z, glm::mat4 snailM) {
 	drawTextured();
 	bullet->drawBullet(M);
 }
+
+float Bazooka::getAngle() {
+	return angle;
+}

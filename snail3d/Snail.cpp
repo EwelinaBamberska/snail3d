@@ -50,6 +50,10 @@ void Snail::draw(float z)
 	if (turn == true) {
 		initSolidDrawing(camera->getP(), camera->getV());
 		pointer->drawAboveSnail(M);
+
+		if (shooting == true) {
+			countShootingTrajectory();
+		}
 	}
 
 	initTextureDrawing(camera->getP(), camera->getV());
@@ -85,6 +89,19 @@ void Snail::setBoxes()
 
     aabb->setmins(x1, y1, z1);
     aabb->setmaxes(x2, y2, z2);
+}
+
+void Snail::shootBullet(float strength) {
+	shooting = true;
+	yShooting = 0;
+	xShooting = 0;
+	angleShooting = bazooka->getAngle();
+	timeShooting = 0.0f;
+	speedShooting = strength;
+}
+
+void Snail::countShootingTrajectory() {
+
 }
 
 bool Snail::getTurn() {
