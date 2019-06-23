@@ -34,10 +34,10 @@ void Snail::moveSnail(float y)
 
 void Snail::rotateSnail(float x)
 {
-	angleOfSnail += x / (2.0 * PI * 6.25);
+	angleOfSnail += x / ( PI * 6.25);
 	if (angleOfSnail > 360)	angleOfSnail -= 360;
 	else if (angleOfSnail < -360)	angleOfSnail += 360;
-	x = x / (2.0 * PI * 360.0);
+	x = x / ( PI * 360.0);
 	M = glm::rotate(M, x, glm::vec3(0.0f, -1.0f, 0.0f));
 }
 

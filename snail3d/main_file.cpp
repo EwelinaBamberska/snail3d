@@ -173,6 +173,7 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 			float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2]);
 			float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2]);
 			snails[i]->setYPos((translateY1 + translateY2) / 2);
+			printf("%f \n", (translateY1 + translateY2) / 2);
 		}
 
 
@@ -242,15 +243,20 @@ int main(void)
 	int i = 0;
 	std::vector<Snail*> snails;
 
+
+	Mountain* mountain = new Mountain(mountainTex, mountainName);
+
 	for (i = 0; i < numberOfSnails; i++) {
 		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false));
-		snails[snails.size() - 1]->setRandomCoords(i);
+		//snails[snails.size() - 1]->setRandomCoords(i);
 		snails[snails.size() - 1]->setBoxes();
+
+		float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2]);
+		float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2]);
+		snails[i]->setYPos((translateY1 + translateY2) / 2);
 	}
 
 	snails[0]->setTurn(true);
-
-	Mountain* mountain = new Mountain(mountainTex, mountainName);
 	//Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);//, spLambert);
 	StrengthBar* strenghBar = new StrengthBar(camera);
 

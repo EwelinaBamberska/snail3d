@@ -25,7 +25,7 @@ public:
 
 private:
 	float scale = 1.0f;
-	float translate = -2.0f;
+	float translate = 0.0f;
 };
 
 
