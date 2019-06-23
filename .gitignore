@@ -1,0 +1,10 @@
+Debug
+packages
+x64
+x86
+.vs
+snail3d/Debug
+snail3d/x64
+snail3d/snail_nowy.vcxproj
+snail3d/snail_nowy.vcxproj.filters
+snail3d/snail_nowy.vcxproj.users
