@@ -7,6 +7,9 @@ Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, G
     camera = c;
     aabb = new AABBObject();
 
+	char pointerName[] = "models/pointer.obj";
+	pointer = new Pointer(pointerName, NULL);
+
 	char name[] = "models/bazooka.obj";
 	bazooka = new Bazooka(bazookaTex, bulletTex, name);
 	turn = tur;
@@ -16,7 +19,7 @@ void Snail::setRandomCoords(int i) {
 	float xcoord = -4.0f + randomFloat(0.0f, 8.0f);
 	float ycoord = -4.0f + randomFloat(0.0f, 8.0f);
 
-	M = glm::translate(M, glm::vec3(xcoord, 0.0f, ycoord)));
+	M = glm::translate(M, glm::vec3(xcoord, 0.0f, ycoord));
 	M = glm::rotate(M, 2*PI * randomFloat(0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
@@ -40,14 +43,20 @@ void Snail::draw(float z)
 	//z = 0.1 * z;
 	z = turn == true ? 0.1 * z : 0;
 
-	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
 
 	// for solids
 	//initSolidDrawing(camera->getP(), camera->getV());
 
+	if (turn == true) {
+		initSolidDrawing(camera->getP(), camera->getV());
+		pointer->drawAboveSnail(M);
+	}
+
 	initTextureDrawing(camera->getP(), camera->getV());
+	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
 	drawTextured();
 	bazooka->drawBazooka(z, M);
+
 
 }
 

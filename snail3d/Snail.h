@@ -20,6 +20,7 @@
 #include "Mountain.h"
 #include "DrawableElement.h"
 #include "Utils.h"
+#include "Pointer.h"
 
 #include <iostream>
 #include <ctime>
@@ -47,6 +48,7 @@ private:
 	Camera* camera;
 	AABBObject* aabb;
 	bool turn;
+	Pointer* pointer;
 };
 
 #endif

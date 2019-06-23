@@ -2,6 +2,7 @@
 
 DrawableElement::DrawableElement(GLuint t, char *objFileName) {
 	M = glm::mat4(1.0f);
+
 	modelObj = new OBJloader();
 	modelObj->loadOBJ(objFileName);
 	tex = t;

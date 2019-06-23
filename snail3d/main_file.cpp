@@ -226,7 +226,6 @@ int main(void)
 	
 	Camera* camera = new Camera();
 
-
 	char mountainName[] = "models/mountain.obj";
 	char snailName[] = "models/snail.obj";
 
