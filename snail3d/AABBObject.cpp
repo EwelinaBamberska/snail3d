@@ -13,12 +13,6 @@ bool AABBObject::check_if_collision(AABBObject* object) {
 	return false;
 }
 
-void AABBObject::sety(float minx, float maxx)
-{
-	maxes[1] = maxx;
-	mins[1] = minx;
-}
-
 void AABBObject::setmaxes(float x, float y, float z) {
 	maxes[0] = x;
 	maxes[1] = y;
@@ -36,9 +30,14 @@ void AABBObject::setz(float minz, float maxz) {
 	mins[2] = minz;
 }
 
-void AABBObject::setx(float minz, float maxz) {
-	maxes[0] = maxz;
-	mins[0] = minz;
+void AABBObject::setx(float minx, float maxx) {
+	maxes[0] = maxx;
+	mins[0] = minx;
+}
+
+void AABBObject::sety(float miny, float maxy) {
+	maxes[1] = maxy;
+	mins[1] = miny;
 }
 
 float* AABBObject::getmaxes() {

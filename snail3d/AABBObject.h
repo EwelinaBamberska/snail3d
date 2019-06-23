@@ -24,13 +24,11 @@ public:
 	void setmaxes(float x, float y, float z);
 	void setmins(float x, float y, float z);
 	void setz(float minz, float maxz);
+	void setx(float minz, float maxz);
+	void sety(float minz, float maxz);
 	float* getmaxes();
 	float* getmins();
 	bool check_if_collision(AABBObject* object);
-	void sety(float minx, float maxx);	
-	void setx(float minx, float maxx);
-
-
 protected:
 
 private:

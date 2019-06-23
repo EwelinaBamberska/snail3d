@@ -1,5 +1,5 @@
-#ifndef BAZOOKA_H
-#define BAZOOKA_H
+#ifndef BULLET_H
+#define BULLET_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,19 +12,16 @@
 #include "shaderprogram.h"
 
 #include "allmodels.h"
-#include "Bullet.h"
 #include "OBJloader.h"
+#include "DrawableElement.h"
 
-
-class Bazooka : public DrawableElement
+class Bullet : public DrawableElement
 {
 public:
-	Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName);
-	void drawBazooka(float z, glm::mat4 M);
+	Bullet(GLuint t, char* objFileName);
+	void drawBullet(glm::mat4 M);
 
 private:
-	float angle;
-	Bullet* bullet;
 };
 
 #endif

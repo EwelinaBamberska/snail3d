@@ -16,37 +16,41 @@
 #include "OBJloader.h"
 #include "allmodels.h"
 #include "AABBObject.h"
-#include "math.h"
 #include "Bazooka.h"
+#include "Mountain.h"
+#include "DrawableElement.h"
+#include "Utils.h"
 
-class Snail
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include <cstdio>
+
+class Snail : public DrawableElement
 {
 public:
-	Snail(Camera* c, GLuint t);// ShaderProgram* s);
+	Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool turn);
 	virtual ~Snail();
-	void moveSnail(float angle_x);
-	void draw();
-	void rotateSnail(float z);
+	void moveSnail(float x);
+	void draw( float z);
+	void rotateSnail(float angle);
 	void setBoxes();
-	void drawBazooka(float z);
 	AABBObject* getaabb();
-	glm::mat4 getM();
-	Bazooka* getBazooka();
-
+	bool getTurn();
+	void setTurn(bool t);
+	void setRandomCoords(int i);
+	void setYPos(float newy);
 
 protected:
 
 private:
-	OBJloader* snailObj;
-	float angleOfBazooka = 0;
-	glm::mat4 M;
-	glm::mat4 bazookaM;
-	Camera* camera;
-	void drawSolid();
-	AABBObject* aabb;
-	float angleOfSnail = 0;
-	GLuint tex;
 	Bazooka* bazooka;
+	Camera* camera;
+	AABBObject* aabb;
+	bool turn;
+	float angleOfSnail = 0.0f;
+	float xpos = 0.0f, zpos = 0.0f;
+	float ypos;
 };
 
-#endif // SNAIL_H
+#endif

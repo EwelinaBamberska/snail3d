@@ -1,5 +1,5 @@
-#ifndef BAZOOKA_H
-#define BAZOOKA_H
+#ifndef MOUNTAIN_H
+#define MOUNTAIN_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,19 +12,21 @@
 #include "shaderprogram.h"
 
 #include "allmodels.h"
-#include "Bullet.h"
 #include "OBJloader.h"
+#include "DrawableElement.h"
+#include "Utils.h"
 
-
-class Bazooka : public DrawableElement
+class Mountain : public DrawableElement
 {
 public:
-	Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName);
-	void drawBazooka(float z, glm::mat4 M);
+	Mountain(GLuint t, char *objFileName);
+	void drawMountain();
+	float getYPosition(float x, float z);
 
 private:
-	float angle;
-	Bullet* bullet;
+	float scale = 1.0f;
+	float translate = -2.0f;
 };
+
 
 #endif
