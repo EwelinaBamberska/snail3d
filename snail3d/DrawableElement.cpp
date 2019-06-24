@@ -64,15 +64,15 @@ void DrawableElement::drawTextured() {
 	//sp->use();//Aktywacja programu cieniuj¹cego
 	//Przeslij parametry programu cieniuj¹cego do karty graficznej
 	//glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
-	glUniform4f(sp->u("lp"), 0, 0, -6, 1); //Wspó³rzêdne Ÿród³a œwiat³a
+	glUniform4f(sp->u("lp"), 0, 5, -6, 1); //Wspó³rzêdne Ÿród³a œwiat³a
 
 	glUniform1i(sp->u("textureMap0"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tex);
 
-	glUniform1i(sp->u("textureMap1"), 1);
+	/*glUniform1i(sp->u("textureMap1"), 1);
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, tex);
+	glBindTexture(GL_TEXTURE_2D, tex);*/
 
 
 	glEnableVertexAttribArray(sp->a("vertex"));  //W³¹cz przesy³anie danych do atrybutu vertex

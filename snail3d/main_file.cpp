@@ -252,7 +252,7 @@ int main(void)
 		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false, sp));
 		snails[snails.size() - 1]->setRandomCoords(i);
 	}
-	printf("fff2");
+	printf("fff2234");
 
 	snails[0]->setTurn(true);
 
