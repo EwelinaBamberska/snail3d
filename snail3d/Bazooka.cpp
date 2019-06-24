@@ -1,10 +1,10 @@
 #include "Bazooka.h"
 
-Bazooka::Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName) : DrawableElement(bazookaT, objFileName) {
+Bazooka::Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName, ShaderProgram * sp) : DrawableElement(bazookaT, objFileName, sp) {
 	angle = 0.0f;
 
 	char name[] = "models/bullet.obj";
-	bullet = new Bullet(bulletT, name);
+	bullet = new Bullet(bulletT, name, sp);
 
 	shooting = false;
 }
@@ -22,7 +22,7 @@ void Bazooka::drawBazooka(float z, glm::mat4 snailM) {
 	M = glm::rotate(M, angle_conversed, glm::vec3(-1.0f, 0.0f, 0.0f));
 
 	// draw
-	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
+	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
 	drawTextured();
 
 	if (!shooting) {

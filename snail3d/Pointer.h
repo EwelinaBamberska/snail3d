@@ -18,7 +18,7 @@
 class Pointer : public DrawableElement
 {
 public:
-	Pointer(char *objFileName, GLuint tex);
+	Pointer(char *objFileName, GLuint tex, ShaderProgram* sp);
 	void drawAboveSnail(glm::mat4 M);
 };
 

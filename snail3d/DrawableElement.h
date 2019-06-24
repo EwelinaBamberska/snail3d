@@ -17,7 +17,7 @@
 class DrawableElement
 {
 public:
-	DrawableElement(GLuint t , char* objFileName);
+	DrawableElement(GLuint t , char* objFileName, ShaderProgram *sp);
 	void drawSolid();
 	void drawTextured();
 	void initTextureDrawing(glm::mat4 P, glm::mat4 V);
@@ -27,6 +27,7 @@ protected:
 	OBJloader* modelObj;
 	glm::mat4 M;
 	GLuint tex;
+	ShaderProgram* sp;
 };
 
 #endif

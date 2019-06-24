@@ -47,6 +47,8 @@ bool changeActiveSnail = false;
 int numberOfSnails = 5;
 bool strengthReleased = false;
 
+ShaderProgram* sp;
+
 //ShaderProgram *spLambert;
 
 //Uchwyty na tekstury
@@ -120,7 +122,7 @@ GLuint readTexture(const char* filename) {
 }
 
 void initOpenGLProgram(GLFWwindow* window) {
-	initShaders();
+	//initShaders();
 	glClearColor(0, 0, 0, 1);
 	glEnable(GL_DEPTH_TEST);
 	glfwSetWindowSizeCallback(window, windowResizeCallback);
@@ -130,16 +132,20 @@ void initOpenGLProgram(GLFWwindow* window) {
 	mountainTex = readTexture("models/mountain_tex.png");
 	bazookaTex = readTexture("models/bazooka_tex.png");
 	bulletTex = readTexture("models/bullet_tex.png");
+
+	sp = new ShaderProgram("vertex.glsl", NULL, "fragment.glsl");
 }
 
 //Release resources allocated by the program
 void freeOpenGLProgram(GLFWwindow* window) {
-	freeShaders();
+	//freeShaders();
 
 	glDeleteTextures(1, &bazookaTex);
 	glDeleteTextures(1, &bulletTex);
 	glDeleteTextures(1, &snailTex);
 	glDeleteTextures(1, &mountainTex);
+
+	delete sp;
 }
 
 int getActiveSnailIndex(std::vector<Snail*> snails) {
@@ -243,15 +249,16 @@ int main(void)
 	std::vector<Snail*> snails;
 
 	for (i = 0; i < numberOfSnails; i++) {
-		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false));
+		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false, sp));
 		snails[snails.size() - 1]->setRandomCoords(i);
 	}
+	printf("fff2");
 
 	snails[0]->setTurn(true);
 
-	Mountain* mountain = new Mountain(mountainTex, mountainName);
+	Mountain* mountain = new Mountain(mountainTex, mountainName, sp);
 	//Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);//, spLambert);
-	StrengthBar* strenghBar = new StrengthBar(camera);
+	StrengthBar* strenghBar = new StrengthBar(camera, sp);
 	
 	while (!glfwWindowShouldClose(window)) //Tak d�ugo jak okno nie powinno zosta� zamkni�te
 	{

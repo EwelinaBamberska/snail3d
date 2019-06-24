@@ -23,7 +23,7 @@
 class StrengthBar
 {
 public:
-	StrengthBar(Camera* c);
+	StrengthBar(Camera* c, ShaderProgram* sp);
 	virtual ~StrengthBar();
 	void loadCube();
 	void drawSolid();
@@ -39,6 +39,7 @@ private:
 	float length;
 	float maxLength;
 	Camera *camera;
+	ShaderProgram* sp;
 };
 
 #endif // STRENGTHBAR_H

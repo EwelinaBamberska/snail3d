@@ -1,6 +1,6 @@
 #include "Bullet.h"
 
-Bullet::Bullet(GLuint t, char* objFileName) : DrawableElement(t, objFileName) {
+Bullet::Bullet(GLuint t, char* objFileName, ShaderProgram *sp) : DrawableElement(t, objFileName, sp) {
 
 }
 
@@ -10,7 +10,7 @@ void Bullet::drawBullet(glm::mat4 bazookaM, float x, float y) {
 
 	// draw shooted bullet
 	M = glm::translate(M, glm::vec3(0.0f, y, x));
-	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
+	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
 
 	drawTextured();
 

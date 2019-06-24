@@ -1,11 +1,12 @@
 #include "StrengthBar.h"
 
-StrengthBar::StrengthBar(Camera *c)
+StrengthBar::StrengthBar(Camera *c, ShaderProgram* s)
 {
 	//ctor
 	camera = c;
 	M = glm::mat4(1.0f);
 	maxLength = 100.0f;
+	sp = s;
 }
 
 void StrengthBar::drawSolid()
@@ -34,14 +35,14 @@ void StrengthBar::draw(float s)
 	if(s)
 	length += s;
 	if (length > maxLength)	length = 0.0f;
-	spLambert->use();
-	glUniform4f(spLambert->u("color"), 1, 0, 0, 1);
+	sp->use();
+	glUniform4f(sp->u("color"), 1, 0, 0, 1);
 
 	glm::mat4 newM = glm::translate(M, glm::vec3(0.0f, -1.2f, -1.5f));
 	newM = glm::scale(newM, glm::vec3(1.5f * length / 100, 0.1f, 0.1f));
-	glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(camera->getP()));
-	glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(camera->getV()));
-	glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(newM));
+	glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(camera->getP()));
+	glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(camera->getV()));
+	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(newM));
 	Models::cube.drawSolid();
 }
 

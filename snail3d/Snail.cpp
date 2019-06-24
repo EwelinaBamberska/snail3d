@@ -2,16 +2,16 @@
 
 
 
-Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool tur) : DrawableElement(snailTex, objFileName)
+Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool tur, ShaderProgram *s) : DrawableElement(snailTex, objFileName, s)
 {
     camera = c;
     aabb = new AABBObject();
 
 	char pointerName[] = "models/pointer.obj";
-	pointer = new Pointer(pointerName, NULL);
+	pointer = new Pointer(pointerName, NULL, sp);
 
 	char name[] = "models/bazooka.obj";
-	bazooka = new Bazooka(bazookaTex, bulletTex, name);
+	bazooka = new Bazooka(bazookaTex, bulletTex, name, sp);
 	turn = tur;
 }
 
@@ -55,7 +55,7 @@ void Snail::draw(float z)
 	}
 
 	initTextureDrawing(camera->getP(), camera->getV());
-	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
+	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
 	drawTextured();
 	bazooka->drawBazooka(z, M);
 	
