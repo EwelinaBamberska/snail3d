@@ -21,13 +21,11 @@ class Mountain : public DrawableElement
 public:
 	Mountain(GLuint t, char *objFileName, ShaderProgram* sp);
 	void drawMountain();
-	float getYPosition(float x, float z, float alpha);
-	void setLastY(float y);
+	float getYPosition(float x, float z, int alpha, float lasty);
 
 private:
 	float scale = 1.0f;
 	float translate = -2.0f;
-	float lasty;
 };
 
 

@@ -2,8 +2,8 @@
 
 
 Mountain::Mountain(GLuint t, char *objFileName, ShaderProgram* s) : DrawableElement(t, objFileName, s) {
-	M = glm::translate(M, glm::vec3(0.0f, -3.0f, 0.0f));
-	M = glm::scale(M, glm::vec3(1.0f, 1.0f, 1.0f));
+	M = glm::translate(M, glm::vec3(0.0f, translate, 0.0f));
+	M = glm::scale(M, glm::vec3(scale, scale, scale));
 }
 
 void Mountain::drawMountain() {
@@ -31,11 +31,8 @@ bool checkIfInsideTriangle(float x1, float x2, float x3, float z1, float z2, flo
 	return false;
 }
 
-void Mountain::setLastY(float y) {
-	lasty = y;
-}
 
-float Mountain::getYPosition(float x, float z, float alph) {
+float Mountain::getYPosition(float x, float z, int alph, float lasty) {
 	//i, i + 1, i + 2, i + 3 -first vertex
 	//i + 4, ... , i + 7 - second vertex
 	//i + 8, ... , i + 11 - third vertex
@@ -46,13 +43,19 @@ float Mountain::getYPosition(float x, float z, float alph) {
 	float* verts = modelObj->get_vertices();
 	float beta, alpha, tmpy;
 	float x1c, x2c, x3c, z1c, z2c, z3c;
+	float n_alpha;
+	if (alph == 0)	n_alpha = 0.0f;
+	else if (alph == 1)	n_alpha = 90.0f;
+	else if (alph == 2)	n_alpha = 180.0;
+	else n_alpha = 270.0f;
 	for (int i = 0; i < modelObj->getVNumber() *4; i += 12) {
-		x1c = verts[i] * scale * cos(-alph * PI / 180.0) - verts[i + 2] * scale * sin(-alph * PI / 180.0);
-		x2c = verts[i + 4] * scale * cos(-alph * PI / 180.0) - verts[i + 6] * scale * sin(-alph * PI / 180.0);
-		x3c = verts[i + 8] * scale * cos(-alph * PI / 180.0) - verts[i + 10] * scale * sin(-alph * PI / 180.0);
-		z1c = verts[i + 2] * scale * cos(-alph * PI / 180.0) + verts[i] * scale * sin(-alph * PI / 180.0);
-		z2c = verts[i + 6] * scale * cos(-alph * PI / 180.0) + verts[i + 4] * scale * sin(-alph * PI / 180.0);
-		z3c = verts[i + 10] * scale * cos(-alph * PI / 180.0) + verts[i + 8] * scale * sin(-alph * PI / 180.0);
+		
+			x1c = verts[i] * scale * cos(n_alpha * PI / 180.0) - verts[i + 2] * scale * sin(n_alpha * PI / 180.0);
+			x2c = verts[i + 4] * scale * cos(n_alpha * PI / 180.0) - verts[i + 6] * scale * sin(n_alpha * PI / 180.0);
+			x3c = verts[i + 8] * scale * cos(n_alpha * PI / 180.0) - verts[i + 10] * scale * sin(n_alpha * PI / 180.0);
+			z1c = verts[i + 2] * scale * cos(n_alpha * PI / 180.0) + verts[i] * scale * sin(n_alpha * PI / 180.0);
+			z2c = verts[i + 6] * scale * cos(n_alpha * PI / 180.0) + verts[i + 4] * scale * sin(n_alpha * PI / 180.0);
+			z3c = verts[i + 10] * scale * cos(n_alpha * PI / 180.0) + verts[i + 8] * scale * sin(n_alpha * PI / 180.0);
 		if (checkIfInsideTriangle(x1c, x2c, x3c, z1c, z2c, z3c, x, z)) {
 			beta = ((z - z1c) * (x2c - x1c) - (x - x1c) * (z2c - z1c)) / (z3c - z1c - (x3c - x1c) * (z2c - z1c));
 			//beta = ((z - verts[i + 2] * scale) * (verts[i + 4] * scale - verts[i] * scale) -

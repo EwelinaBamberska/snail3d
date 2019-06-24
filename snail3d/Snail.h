@@ -26,14 +26,15 @@
 #include <cstdlib>
 #include <cstdio>
 #include "Pointer.h"
+#include "HealthBar.h"
 
 class Snail : public DrawableElement
 {
 public:
-	Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool turn, ShaderProgram* sp);
+	Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool turn, ShaderProgram* sp, GLuint blueTex, GLuint redTex);
 	virtual ~Snail();
 	void moveSnail(float x);
-	void draw( float z);
+	void draw(float z);
 	void rotateSnail(int angle);
 	bool getTurn();
 	void setTurn(bool t);
@@ -45,6 +46,9 @@ public:
 	void countShootingTrajectory(); // to do
 	Bazooka* getBazooka();
 	bool getShooting();
+	void loseLife();
+	bool getIfLive();
+	void setShooting();
 
 protected:
 
@@ -69,6 +73,9 @@ private:
 	float timeShooting;
 	float speedShooting;
 	int angle = 0;
+	HealthBar* healthBar;
+	HealthBar* actualLife;
+	bool ifLive = true;
 };
 
 #endif

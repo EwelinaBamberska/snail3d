@@ -127,6 +127,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="DrawableElement.cpp" />
+    <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main_file.cpp" />
     <ClCompile Include="model.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="cube.h" />
     <ClInclude Include="DrawableElement.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="HealthBar.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="Mountain.h" />

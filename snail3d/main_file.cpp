@@ -46,6 +46,7 @@ float strength = 0;
 bool changeActiveSnail = false;
 int numberOfSnails = 5;
 bool strengthReleased = false;
+bool shooting = false;
 
 //ShaderProgram *spLambert;
 ShaderProgram* sp;
@@ -56,6 +57,8 @@ GLuint bazookaTex;
 GLuint bulletTex;
 GLuint snailTex;
 GLuint mountainTex;
+GLuint blueTex;
+GLuint redTex;
 
 
 //Procedura obs�ugi b��d�w
@@ -72,7 +75,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		if (key == GLFW_KEY_S) speed_y = -PI / 2;
 		if (key == GLFW_KEY_UP) speed_up = PI / 2;
 		if (key == GLFW_KEY_DOWN) speed_up = -PI / 2;
-		if (key == GLFW_KEY_SPACE) strength = 0.1;
+		if ( key == GLFW_KEY_SPACE) strength = 0.1;
 	}
 	if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_A) speed_x = 1;
@@ -132,6 +135,8 @@ void initOpenGLProgram(GLFWwindow* window) {
 	mountainTex = readTexture("models/mountain_tex.png");
 	bazookaTex = readTexture("models/bazooka_tex.png");
 	bulletTex = readTexture("models/bullet_tex.png");
+	blueTex = readTexture("models/blue_texture.png");
+	redTex = readTexture("models/red_texture.png");
 	sp = new ShaderProgram("vertex.glsl", NULL, "fragment.glsl");
 
 }
@@ -144,6 +149,8 @@ void freeOpenGLProgram(GLFWwindow* window) {
 	glDeleteTextures(1, &bulletTex);
 	glDeleteTextures(1, &snailTex);
 	glDeleteTextures(1, &mountainTex);
+	glDeleteTextures(1, &blueTex);
+	glDeleteTextures(1, &redTex);
 	delete sp;
 
 }
@@ -155,7 +162,6 @@ int getActiveSnailIndex(std::vector<Snail*> snails) {
 		}
 	}
 }
-
 
 //Procedura rysuj�ca zawarto�� sceny
 void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::vector<Snail*> snails) { //  Snail* snail) {
@@ -181,35 +187,44 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 		if (snails[i]->getTurn() == true) {
 			snails[i]->rotateSnail(speed_x);
 			speed_x = 0;
-			snails[i]->moveSnail(speed_y * 0.01);
-			if (speed_y) {
-				//obliczanie y
-				float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle());
-				float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle());
-				snails[i]->setYPos((translateY1 + translateY2) / 2);
-				mountain->setLastY((translateY1 + translateY2) / 2);
-				snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);  //ustawianie y minimalnego i maksymalnego do kolizji
-			}
+			snails[i]->moveSnail(speed_y * 0.005);
+			//if (speed_y) {
+			//	//obliczanie y
+			//	float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle());
+			//	float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle());
+			//	snails[i]->setYPos((translateY1 + translateY2) / 2);
+			//	mountain->setLastY((translateY1 + translateY2) / 2);
+			//	snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);  //ustawianie y minimalnego i maksymalnego do kolizji
+			//}
 			if (snails[i]->getShooting()) {
 				for (int j = 0; j < snails.size(); j++) {
 					//printf("%d X min %f max %f, \t Z min %f max %f\n",j, snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getaabb()->getmaxes()[2]);
 					//printf("SPRAWDZA\n");
 					if (i != j && snails[i]->getBazooka()->getBullet()->getaabb()->check_if_collision(snails[j]->getaabb())) {
-						 printf("KOLIZJA Z %d\n", j);
+						snails[j]->loseLife();
+						printf("%d X min %f max %f, \t Z min %f max %f\n",j, snails[j]->getaabb()->getmins()[0], snails[j]->getaabb()->getmaxes()[0], snails[j]->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
+						printf("bullet %d X min %f max %f, \t Z min %f max %f\n", j, snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmaxes()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
+
+						printf("KOLIZJA Z %d\n", j);
+						snails[i]->setShooting();
+						break;
 					}
 				}
 			}
-			
+
 		}
-
-
 		snails[i]->draw(speed_up);
+		/*if (shooting) {
+			if (snails[i]->getBazooka()->getBullet()->getaabb()->getmaxes()[1] < -5.0f) {
+				snails[i]->setShooting();
+				shooting = false;
+			}
+		}*/
 	}
 
 	/*if (snail->getTurn() == true) {
 		snail->moveSnail(speed_x, speed_y, speed_up);
 	}
-
 	snail->draw(speed_up);*/
 
 
@@ -220,6 +235,7 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 	else {
 		if (strengthReleased) {
 			strengthReleased = false;
+			//shooting = true;
 			snails[active]->shootBullet(bar->getLength());
 		}
 		strength = 0;
@@ -275,16 +291,16 @@ int main(void)
 	Mountain* mountain = new Mountain(mountainTex, mountainName, sp);
 
 	for (i = 0; i < numberOfSnails; i++) {
-		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false, sp));
+		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false, sp, blueTex, redTex));
 		snails[snails.size() - 1]->setBoxes();
 
 		snails[snails.size() - 1]->setRandomCoords(i);
 
-		float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle());
-		float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle());
-		snails[i]->setYPos((translateY1 + translateY2) / 2);
-		snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);
-		mountain->setLastY((translateY1 + translateY2) / 2);
+		//float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle());
+		//float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle());
+		//snails[i]->setYPos((translateY1 + translateY2) / 2);
+		//snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);
+		//mountain->setLastY((translateY1 + translateY2) / 2);
 
 	}
 
