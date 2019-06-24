@@ -21,7 +21,7 @@ class Mountain : public DrawableElement
 public:
 	Mountain(GLuint t, char *objFileName);
 	void drawMountain();
-	float getYPosition(float x, float z);
+	float getYPosition(float x, float z, float alpha);
 	void setLastY(float y);
 
 private:

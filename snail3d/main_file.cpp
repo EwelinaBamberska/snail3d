@@ -172,18 +172,21 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 		if (snails[i]->getTurn() == true) {
 			snails[i]->rotateSnail(speed_x);
 			snails[i]->moveSnail(speed_y * 0.01);
-			
-			//obliczanie y
-			float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2]);
-			float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2]);
-			snails[i]->setYPos((translateY1 + translateY2) / 2);
-			mountain->setLastY((translateY1 + translateY2) / 2);
-			snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);  //ustawianie y minimalnego i maksymalnego do kolizji
+			if (speed_y) {
+				//obliczanie y
+				float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle());
+				float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle());
+				snails[i]->setYPos((translateY1 + translateY2) / 2);
+				mountain->setLastY((translateY1 + translateY2) / 2);
+				snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);  //ustawianie y minimalnego i maksymalnego do kolizji
+				printf("%f \n", (translateY1 + translateY2) / 2);
+
+			}
 			for (int j = 0; j < snails.size(); j++) {
 				if (i != j && snails[i]->getaabb()->check_if_collision(snails[j]->getaabb()))
-					printf("COLLISION %d %d\n", i, j);
+					//kolizja
+					;
 			}
-			printf("%f \n", (translateY1 + translateY2) / 2);
 		}
 
 
@@ -259,8 +262,8 @@ int main(void)
 		//snails[snails.size() - 1]->setRandomCoords(i);
 		snails[snails.size() - 1]->setBoxes();
 
-		float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2]);
-		float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2]);
+		float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle());
+		float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle());
 		snails[i]->setYPos((translateY1 + translateY2) / 2);
 		snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);
 		mountain->setLastY((translateY1 + translateY2) / 2);

@@ -56,3 +56,38 @@ void DrawableElement::drawTextured() {
 	glDisableVertexAttribArray(spTextured->a("vertex"));
 	glDisableVertexAttribArray(spTextured->a("texCoord"));
 }
+
+
+
+void DrawableElement::setBoxes()
+{
+	int n_vertices = modelObj->getVNumber() * 4;
+	float* verts = modelObj->get_vertices();
+	float x1 = verts[0], y1 = verts[1], z1 = verts[2]; //min
+	float x2 = verts[0], y2 = verts[1], z2 = verts[2]; //max
+
+	for (int i = 4; i < n_vertices; i += 4)
+	{
+		if (verts[i] < x1)
+			x1 = verts[i];
+		else if (verts[i] > x2)
+			x2 = verts[i];
+		if (verts[i + 1] < y1)
+			y1 = verts[i + 1];
+		else if (verts[i + 1] > y2)
+			y2 = verts[i + 1];
+		if (verts[i + 2] < z1)
+			z1 = verts[i + 2];
+		else if (verts[i + 2] > z2)
+			z2 = verts[i + 2];
+	}
+
+	aabb->setmins(x1, y1, z1);
+	aabb->setmaxes(x2, y2, z2);
+}
+
+
+AABBObject* DrawableElement::getaabb()
+{
+	return aabb;
+}

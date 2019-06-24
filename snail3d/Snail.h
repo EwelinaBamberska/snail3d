@@ -34,19 +34,17 @@ public:
 	void moveSnail(float x);
 	void draw( float z);
 	void rotateSnail(float angle);
-	void setBoxes();
-	AABBObject* getaabb();
 	bool getTurn();
 	void setTurn(bool t);
 	void setRandomCoords(int i);
 	void setYPos(float newy);
+	float getAngle();
 
 protected:
 
 private:
 	Bazooka* bazooka;
 	Camera* camera;
-	AABBObject* aabb;
 	bool turn;
 	float angleOfSnail = 0.0f;
 	float xpos = 0.0f, zpos = 0.0f;

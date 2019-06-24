@@ -13,6 +13,7 @@
 
 #include "allmodels.h"
 #include "OBJloader.h"
+#include "AABBObject.h"
 
 class DrawableElement
 {
@@ -22,10 +23,14 @@ public:
 	void drawTextured();
 	void initTextureDrawing(glm::mat4 P, glm::mat4 V);
 	void initSolidDrawing(glm::mat4 P, glm::mat4 V);
+	void setBoxes();
+	AABBObject* getaabb();
 
 protected: 
 	OBJloader* modelObj;
 	glm::mat4 M;
+	AABBObject* aabb;
+
 	GLuint tex;
 };
 

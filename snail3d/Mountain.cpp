@@ -34,10 +34,13 @@ void Mountain::setLastY(float y) {
 	lasty = y;
 }
 
-float Mountain::getYPosition(float x, float z) {
+float Mountain::getYPosition(float x1, float z1, float alph) {
 	//i, i + 1, i + 2, i + 3 -first vertex
 	//i + 4, ... , i + 7 - second vertex
 	//i + 8, ... , i + 11 - third vertex
+	float z = z1 * cos((alph) * PI / 180.0) - x1 * sin((alph) * PI / 180.0);
+	float x = x1 * cos((alph) * PI / 180.0) + z1 * sin((alph) * PI / 180.0);
+	printf("X %f Z %f A %f    %f\n", x, z, alph, (alph)* PI / 180.0);
 	float yToReturn = NULL;
 	float* verts = modelObj->get_vertices();
 	float beta, alpha, tmpy;
@@ -59,9 +62,11 @@ float Mountain::getYPosition(float x, float z) {
 			else if (yToReturn < tmpy + translate) {
 				yToReturn = tmpy + translate;
 			}
+			printf("%f tmp\n", tmpy + translate);
 		}
 	}
 	if (!yToReturn)
 		yToReturn = lasty;
+	printf("%F \n", yToReturn);
 	return yToReturn;
 }
