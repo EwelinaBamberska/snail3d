@@ -66,6 +66,10 @@ void Snail::draw(float z, double r, double g, double b)
 	if (shooting == true) {
 		countShootingTrajectory(r, g, b);
 	}
+
+	if (flashTime > 0.0f) {
+		bazooka->getBullet()->drawExplosion();
+	}
 }
 
 void Snail::decreaseFlashTime() {

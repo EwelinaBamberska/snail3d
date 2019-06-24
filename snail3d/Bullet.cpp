@@ -2,6 +2,8 @@
 
 Bullet::Bullet(GLuint t, char* objFileName, ShaderProgram *sp) : DrawableElement(t, objFileName, sp) {
 
+	char name[] = "models/explosion.obj";
+	explosion = new ExplosionEffect(t, name, sp);
 }
 
 void Bullet::drawBullet(glm::mat4 bazookaM, float x, float y, double r, double g, double b) {
@@ -14,4 +16,9 @@ void Bullet::drawBullet(glm::mat4 bazookaM, float x, float y, double r, double g
 
 	drawTextured(r, g, b);
 
+}
+
+
+void Bullet::drawExplosion() {
+	explosion->draw(M);
 }

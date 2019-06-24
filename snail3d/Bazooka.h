@@ -14,6 +14,7 @@
 #include "allmodels.h"
 #include "Bullet.h"
 #include "OBJloader.h"
+#include "ExplosionEffect.h"
 
 
 class Bazooka : public DrawableElement
@@ -25,6 +26,8 @@ public:
 	void moveBullet(float x, float y, double r, double g, double b);
 	void startShooting();
 	void endShooting();
+	Bullet* getBullet();
+	//void drawExplosion();
 
 private:
 	float angle;

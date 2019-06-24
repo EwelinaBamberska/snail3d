@@ -34,9 +34,17 @@ void Bazooka::startShooting() {
 	shooting = true;
 	shootedM = M;
 }
+//
+//void Bazooka::drawExplosion() {
+//	explosion->draw(M);
+//}
 
 void Bazooka::endShooting() {
 	shooting = false;
+}
+
+Bullet* Bazooka::getBullet() {
+	return bullet;
 }
 
 void Bazooka::moveBullet(float x, float y, double r, double g, double b) {
