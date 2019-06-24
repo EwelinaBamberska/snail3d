@@ -38,18 +38,18 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "Mountain.h"
 #include <vector>
 
-float speed_x = 0;
+int speed_x = 0;
 float speed_y = 0;
 float speed_up = 0;
 float aspectRatio = 1;
 float strength = 0;
 bool changeActiveSnail = false;
 int numberOfSnails = 5;
-
-float angle_x = 0; //Aktualny k�t obrotu obiektu
-float angle_y = 0; //Aktualny k�t obrotu obiektu
+bool strengthReleased = false;
 
 //ShaderProgram *spLambert;
+ShaderProgram* sp;
+
 
 //Uchwyty na tekstury
 GLuint bazookaTex;
@@ -66,8 +66,8 @@ void error_callback(int error, const char* description) {
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (action == GLFW_PRESS) {
-		if (key == GLFW_KEY_A) speed_x = -PI;
-		if (key == GLFW_KEY_D) speed_x = PI;
+		//if (key == GLFW_KEY_A) speed_x = -PI;
+		//if (key == GLFW_KEY_D) speed_x = PI;
 		if (key == GLFW_KEY_W) speed_y = PI / 2;
 		if (key == GLFW_KEY_S) speed_y = -PI / 2;
 		if (key == GLFW_KEY_UP) speed_up = PI / 2;
@@ -75,13 +75,16 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		if (key == GLFW_KEY_SPACE) strength = 0.1;
 	}
 	if (action == GLFW_RELEASE) {
-		if (key == GLFW_KEY_A) speed_x = 0;
-		if (key == GLFW_KEY_D) speed_x = 0;
+		if (key == GLFW_KEY_A) speed_x = 1;
+		if (key == GLFW_KEY_D) speed_x = -1;
 		if (key == GLFW_KEY_W) speed_y = 0;
 		if (key == GLFW_KEY_S) speed_y = 0;
 		if (key == GLFW_KEY_UP) speed_up = 0;
 		if (key == GLFW_KEY_DOWN) speed_up = 0;
-		if (key == GLFW_KEY_SPACE) strength = 0;
+		if (key == GLFW_KEY_SPACE) {
+			strength = 0;
+			strengthReleased = true;
+		}		
 		if (key == GLFW_KEY_TAB) changeActiveSnail = true;
 	}
 }
@@ -129,6 +132,8 @@ void initOpenGLProgram(GLFWwindow* window) {
 	mountainTex = readTexture("models/mountain_tex.png");
 	bazookaTex = readTexture("models/bazooka_tex.png");
 	bulletTex = readTexture("models/bullet_tex.png");
+	sp = new ShaderProgram("vertex.glsl", NULL, "fragment.glsl");
+
 }
 
 //Release resources allocated by the program
@@ -139,6 +144,8 @@ void freeOpenGLProgram(GLFWwindow* window) {
 	glDeleteTextures(1, &bulletTex);
 	glDeleteTextures(1, &snailTex);
 	glDeleteTextures(1, &mountainTex);
+	delete sp;
+
 }
 
 int getActiveSnailIndex(std::vector<Snail*> snails) {
@@ -158,19 +165,22 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 	// narysuj gure
 	mountain->drawMountain();
 
+	int active = getActiveSnailIndex(snails);
+
 	// na przycisk "TAB" zmien aktywnego slimaka
 	if (changeActiveSnail == true) {
 		changeActiveSnail = false;
-		int active = getActiveSnailIndex(snails);
 
 		snails[active]->setTurn(false);
 		snails[(active + 1) % 5]->setTurn(true);
+		active = (active + 1) % 5;
 	}
 
 	// narysuj slimaki
 	for (int i = 0; i < snails.size(); i++) {
 		if (snails[i]->getTurn() == true) {
 			snails[i]->rotateSnail(speed_x);
+			speed_x = 0;
 			snails[i]->moveSnail(speed_y * 0.01);
 			if (speed_y) {
 				//obliczanie y
@@ -179,14 +189,17 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 				snails[i]->setYPos((translateY1 + translateY2) / 2);
 				mountain->setLastY((translateY1 + translateY2) / 2);
 				snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);  //ustawianie y minimalnego i maksymalnego do kolizji
-				printf("%f \n", (translateY1 + translateY2) / 2);
-
 			}
-			for (int j = 0; j < snails.size(); j++) {
-				if (i != j && snails[i]->getaabb()->check_if_collision(snails[j]->getaabb()))
-					//kolizja
-					;
+			if (snails[i]->getShooting()) {
+				for (int j = 0; j < snails.size(); j++) {
+					//printf("%d X min %f max %f, \t Z min %f max %f\n",j, snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getaabb()->getmaxes()[2]);
+					//printf("SPRAWDZA\n");
+					if (i != j && snails[i]->getBazooka()->getBullet()->getaabb()->check_if_collision(snails[j]->getaabb())) {
+						 printf("KOLIZJA Z %d\n", j);
+					}
+				}
 			}
+			
 		}
 
 
@@ -205,6 +218,10 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 		bar->draw(strength);
 	}
 	else {
+		if (strengthReleased) {
+			strengthReleased = false;
+			snails[active]->shootBullet(bar->getLength());
+		}
 		strength = 0;
 		bar->setLength(0);
 	}
@@ -255,12 +272,13 @@ int main(void)
 	std::vector<Snail*> snails;
 
 
-	Mountain* mountain = new Mountain(mountainTex, mountainName);
+	Mountain* mountain = new Mountain(mountainTex, mountainName, sp);
 
 	for (i = 0; i < numberOfSnails; i++) {
-		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false));
-		//snails[snails.size() - 1]->setRandomCoords(i);
+		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false, sp));
 		snails[snails.size() - 1]->setBoxes();
+
+		snails[snails.size() - 1]->setRandomCoords(i);
 
 		float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle());
 		float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle());
@@ -272,12 +290,10 @@ int main(void)
 
 	snails[0]->setTurn(true);
 	//Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);//, spLambert);
-	StrengthBar* strenghBar = new StrengthBar(camera);
+	StrengthBar* strenghBar = new StrengthBar(camera, sp);
 
 	while (!glfwWindowShouldClose(window)) //Tak d�ugo jak okno nie powinno zosta� zamkni�te
 	{
-		angle_x += speed_x * glfwGetTime(); //Zwi�ksz/zmniejsz k�t obrotu na podstawie pr�dko�ci i czasu jaki up�yna� od poprzedniej klatki
-		angle_y += speed_y * glfwGetTime(); //Zwi�ksz/zmniejsz k�t obrotu na podstawie pr�dko�ci i czasu jaki up�yna� od poprzedniej klatki
 
 		glfwSetTime(0); //Zeruj timer
 		drawScene(window, strenghBar, mountain, snails); // ,snail)		//Wykonaj procedur� rysuj�c�

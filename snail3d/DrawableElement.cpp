@@ -1,10 +1,13 @@
-#include "DrawableElement.h"
+﻿#include "DrawableElement.h"
 
-DrawableElement::DrawableElement(GLuint t, char *objFileName) {
+DrawableElement::DrawableElement(GLuint t, char *objFileName, ShaderProgram *s) {
 	M = glm::mat4(1.0f);
+	aabb = new AABBObject();
+
 	modelObj = new OBJloader();
 	modelObj->loadOBJ(objFileName);
 	tex = t;
+	sp = s;
 }
 
 void DrawableElement::drawSolid() {
@@ -28,35 +31,67 @@ void DrawableElement::drawSolid() {
 }
 
 void DrawableElement::initTextureDrawing(glm::mat4 P, glm::mat4 V) {
-	spTextured->use();
-	glUniformMatrix4fv(spTextured->u("P"), 1, false, glm::value_ptr(P));
-	glUniformMatrix4fv(spTextured->u("V"), 1, false, glm::value_ptr(V));
+	/*sp->use();
+	glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
+	glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));*/
+	sp->use();
+	glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
+	glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
 }
 
 void DrawableElement::initSolidDrawing(glm::mat4 P, glm::mat4 V) {
-	spLambert->use();
-	glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(P));
-	glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(V));
+	sp->use();
+	glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
+	glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
 }
 
 void DrawableElement::drawTextured() {
+	/*
+	glEnableVertexAttribArray(sp->a("vertex"));
+	glVertexAttribPointer(sp->a("vertex"), 4, GL_FLOAT, false, 0, modelObj->get_vertices());
 
-	glEnableVertexAttribArray(spTextured->a("vertex"));
-	glVertexAttribPointer(spTextured->a("vertex"), 4, GL_FLOAT, false, 0, modelObj->get_vertices());
-
-	glEnableVertexAttribArray(spTextured->a("texCoord"));
-	glVertexAttribPointer(spTextured->a("texCoord"), 2, GL_FLOAT, false, 0, modelObj->get_texCoords());
+	glEnableVertexAttribArray(sp->a("texCoord"));
+	glVertexAttribPointer(sp->a("texCoord"), 2, GL_FLOAT, false, 0, modelObj->get_texCoords());
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tex);
-	glUniform1i(spLambertTextured->u("tex"), 0);
+	glUniform1i(sp->u("tex"), 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, modelObj->getVNumber());
 
-	glDisableVertexAttribArray(spTextured->a("vertex"));
-	glDisableVertexAttribArray(spTextured->a("texCoord"));
-}
+	glDisableVertexAttribArray(sp->a("vertex"));
+	glDisableVertexAttribArray(sp->a("texCoord"));*/
 
+	//sp->use();//Aktywacja programu cieniuj�cego
+	//Przeslij parametry programu cieniuj�cego do karty graficznej
+	//glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
+	glUniform4f(sp->u("lp"), 0, 5, -6, 1); //Wsp�rz�dne �r�d�a �wiat�a
+
+	glUniform1i(sp->u("textureMap0"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tex);
+
+	/*glUniform1i(sp->u("textureMap1"), 1);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, tex);*/
+
+
+	glEnableVertexAttribArray(sp->a("vertex"));  //W��cz przesy�anie danych do atrybutu vertex
+	glVertexAttribPointer(sp->a("vertex"), 4, GL_FLOAT, false, 0, modelObj->get_vertices()); //Wska� tablic� z danymi dla atrybutu vertex
+
+	glEnableVertexAttribArray(sp->a("normal"));  //W��cz przesy�anie danych do atrybutu normal
+	glVertexAttribPointer(sp->a("normal"), 4, GL_FLOAT, false, 0, modelObj->get_normals()); //Wska� tablic� z danymi dla atrybutu normal
+
+	glEnableVertexAttribArray(sp->a("texCoord0"));  //W��cz przesy�anie danych do atrybutu texCoord0
+	glVertexAttribPointer(sp->a("texCoord0"), 2, GL_FLOAT, false, 0, modelObj->get_texCoords()); //Wska� tablic� z danymi dla atrybutu texCoord0
+
+	glDrawArrays(GL_TRIANGLES, 0, modelObj->getVNumber()); //Narysuj obiekt
+
+	glDisableVertexAttribArray(sp->a("vertex"));  //Wy��cz przesy�anie danych do atrybutu vertex
+	glDisableVertexAttribArray(sp->a("normal"));  //Wy��cz przesy�anie danych do atrybutu normal
+	glDisableVertexAttribArray(sp->a("texCoord0"));  //Wy��cz przesy�anie danych do atrybutu texCoord0
+
+}
 
 
 void DrawableElement::setBoxes()

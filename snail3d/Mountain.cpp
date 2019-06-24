@@ -1,12 +1,13 @@
 #include "Mountain.h"
 
-Mountain::Mountain(GLuint t, char *objFileName) : DrawableElement(t, objFileName) {
-	M = glm::translate(M, glm::vec3(0.0f, translate, 0.0f));
-	M = glm::scale(M, glm::vec3(scale, scale, scale));
+
+Mountain::Mountain(GLuint t, char *objFileName, ShaderProgram* s) : DrawableElement(t, objFileName, s) {
+	M = glm::translate(M, glm::vec3(0.0f, -3.0f, 0.0f));
+	M = glm::scale(M, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
-void Mountain::drawMountain() {	
-	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
+void Mountain::drawMountain() {
+	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
 	drawTextured();
 }
 
@@ -34,24 +35,34 @@ void Mountain::setLastY(float y) {
 	lasty = y;
 }
 
-float Mountain::getYPosition(float x1, float z1, float alph) {
+float Mountain::getYPosition(float x, float z, float alph) {
 	//i, i + 1, i + 2, i + 3 -first vertex
 	//i + 4, ... , i + 7 - second vertex
 	//i + 8, ... , i + 11 - third vertex
-	float z = z1 * cos((alph) * PI / 180.0) - x1 * sin((alph) * PI / 180.0);
-	float x = x1 * cos((alph) * PI / 180.0) + z1 * sin((alph) * PI / 180.0);
-	printf("X %f Z %f A %f    %f\n", x, z, alph, (alph)* PI / 180.0);
+	//float z = z1 * cos((360 - alph) * PI / 180.0) - x1 * sin((360 - alph) * PI / 180.0);
+	//float x = x1 * cos((360 - alph) * PI / 180.0) + z1 * sin((360 - alph) * PI / 180.0);
+	//printf("X %f Z %f\n", x1, z1);
 	float yToReturn = NULL;
 	float* verts = modelObj->get_vertices();
 	float beta, alpha, tmpy;
+	float x1c, x2c, x3c, z1c, z2c, z3c;
 	for (int i = 0; i < modelObj->getVNumber() *4; i += 12) {
-		if (checkIfInsideTriangle(verts[i] * scale, verts[i + 4] * scale, verts[i + 8] * scale, verts[i + 2] * scale, verts[i + 6] * scale, verts[i + 10] * scale, x, z)) {
-			beta = ((z - verts[i + 2] * scale) * (verts[i + 4] * scale - verts[i] * scale) -
-				(x - verts[i] * scale) * (verts[i + 6] * scale - verts[i + 2] * scale)) /
-				(verts[i + 10] * scale - verts[i + 2] * scale - (verts[i + 8] * scale - verts[i] * scale) *
-				(verts[i + 6] * scale - verts[i + 2] * scale));
-			alpha = (x - verts[i] * scale - beta * (verts[i + 8] * scale - verts[i] * scale)) / (verts[i + 4] * scale - verts[i] * scale);
+		x1c = verts[i] * scale * cos(-alph * PI / 180.0) - verts[i + 2] * scale * sin(-alph * PI / 180.0);
+		x2c = verts[i + 4] * scale * cos(-alph * PI / 180.0) - verts[i + 6] * scale * sin(-alph * PI / 180.0);
+		x3c = verts[i + 8] * scale * cos(-alph * PI / 180.0) - verts[i + 10] * scale * sin(-alph * PI / 180.0);
+		z1c = verts[i + 2] * scale * cos(-alph * PI / 180.0) + verts[i] * scale * sin(-alph * PI / 180.0);
+		z2c = verts[i + 6] * scale * cos(-alph * PI / 180.0) + verts[i + 4] * scale * sin(-alph * PI / 180.0);
+		z3c = verts[i + 10] * scale * cos(-alph * PI / 180.0) + verts[i + 8] * scale * sin(-alph * PI / 180.0);
+		if (checkIfInsideTriangle(x1c, x2c, x3c, z1c, z2c, z3c, x, z)) {
+			beta = ((z - z1c) * (x2c - x1c) - (x - x1c) * (z2c - z1c)) / (z3c - z1c - (x3c - x1c) * (z2c - z1c));
+			//beta = ((z - verts[i + 2] * scale) * (verts[i + 4] * scale - verts[i] * scale) -
+				//(x - verts[i] * scale) * (verts[i + 6] * scale - verts[i + 2] * scale)) /
+				//(verts[i + 10] * scale - verts[i + 2] * scale - (verts[i + 8] * scale - verts[i] * scale) *
+				//(verts[i + 6] * scale - verts[i + 2] * scale));
+			//alpha = (x - verts[i] * scale - beta * (verts[i + 8] * scale - verts[i] * scale)) / (verts[i + 4] * scale - verts[i] * scale);
+			alpha = (x - x1c - beta * (x3c - x1c)) / (x2c - x1c);
 			tmpy = alpha * (verts[i + 5] * scale - verts[i + 1] * scale) + beta * (verts[i + 9] * scale - verts[i + 1] * scale) + verts[i + 1] * scale;
+			
 			if (tmpy > getMax(verts[i + 1], verts[i + 5], verts[i + 9]) * scale || isnan(tmpy));
 				tmpy = (verts[i + 1] + verts[i + 5] + verts[i + 9]) / 3 * scale;
 			if (tmpy < getMin(verts[i + 1], verts[i + 5], verts[i + 9]) * scale)
@@ -62,11 +73,9 @@ float Mountain::getYPosition(float x1, float z1, float alph) {
 			else if (yToReturn < tmpy + translate) {
 				yToReturn = tmpy + translate;
 			}
-			printf("%f tmp\n", tmpy + translate);
 		}
 	}
 	if (!yToReturn)
 		yToReturn = lasty;
-	printf("%F \n", yToReturn);
 	return yToReturn;
 }

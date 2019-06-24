@@ -29,12 +29,20 @@ public:
 	float* getmaxes();
 	float* getmins();
 	bool check_if_collision(AABBObject* object);
+	void move(float x, float y, float z);
+	void moveOn(float x, float y, float z);
+	void setprevious();
+	bool getChanged();
+	void setChanged(bool b);
 protected:
 
 private:
 	float maxes[3];
 	float mins[3];
-	float miny, maxy;
+	float pmaxes[3];
+	float pmins[3];
+	float miny, maxy, minx, maxx, minz, maxz;
+	bool changed = false;
 };
 
 #endif // AABBOBJECT_H

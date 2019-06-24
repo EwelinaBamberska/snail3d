@@ -19,12 +19,18 @@
 class Bazooka : public DrawableElement
 {
 public:
-	Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName);
+	Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName, ShaderProgram *sp);
 	void drawBazooka(float z, glm::mat4 M);
+	float getAngle();
+	void moveBullet(float x, float y);
+	void startShooting();
+	Bullet* getBullet();
 
 private:
 	float angle;
 	Bullet* bullet;
+	bool shooting;
+	glm::mat4 shootedM;
 };
 
 #endif
