@@ -13,6 +13,9 @@ Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, G
 	char name[] = "models/bazooka.obj";
 	bazooka = new Bazooka(bazookaTex, bulletTex, name, sp);
 	turn = tur;
+
+	flashTime = 0.0f;
+	initialFlashTime = 5.0f;
 }
 
 void Snail::setRandomCoords(int i) {
@@ -40,11 +43,11 @@ void Snail::rotateSnail(float x, float y, float z)
     M = glm::rotate(M, x, glm::vec3(0.0f, -1.0f, 0.0f));
 }
 
-void Snail::draw(float z)
+void Snail::draw(float z, double r, double g, double b)
 {
 	//z = 0.1 * z;
 	z = turn == true ? 0.1 * z : 0;
-
+	decreaseFlashTime();
 
 	// for solids
 	//initSolidDrawing(camera->getP(), camera->getV());
@@ -56,12 +59,16 @@ void Snail::draw(float z)
 
 	initTextureDrawing(camera->getP(), camera->getV());
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
-	drawTextured();
-	bazooka->drawBazooka(z, M);
+	drawTextured(r, g, b);
+	bazooka->drawBazooka(z, M, r, g, b);
 	
 	if (shooting == true) {
-		countShootingTrajectory();
+		countShootingTrajectory(r, g, b);
 	}
+}
+
+void Snail::decreaseFlashTime() {
+	if (flashTime > 0.0f) flashTime -= 0.01f;
 }
 
 void Snail::setBoxes()
@@ -102,12 +109,20 @@ void Snail::shootBullet(float strength) {
 	bazooka->startShooting();
 }
 
-void Snail::countShootingTrajectory() {
+void Snail::countShootingTrajectory(double r, double g, double b) {
 	xShooting = speedShooting * timeShooting * cos(angleShooting * PI / 180) * 1.8f;
 	yShooting = speedShooting * timeShooting * sin(angleShooting * PI / 180) + 3.0f - 0.5f * 9.806f * pow(timeShooting, 2);
 	timeShooting += 0.01f;
 
-	bazooka->moveBullet(xShooting, yShooting);
+	bazooka->moveBullet(xShooting, yShooting, r, g, b);
+
+	// warunek dla uderzajacej kuli
+	// to do - roboczo wybuch i znikniecie kuli w punkcie ponizej 0.0
+	if (yShooting < 0.0f) {
+		shooting = false;
+		bazooka->endShooting();
+		flashTime = initialFlashTime;
+	}
 }
 
 bool Snail::getTurn() {
@@ -118,12 +133,37 @@ void Snail::setTurn(bool t) {
 	turn = t;
 }
 
+RGBflashLight Snail::getRGB() {
+	RGBflashLight rgb;
+	//printf("%f\n", flashTime);
+
+	if (flashTime <= 0.0f) {
+		rgb.r = 0;
+		rgb.g = 0;
+		rgb.b = 0;
+	}
+	else if (flashTime <= initialFlashTime / 2.0) {
+		rgb.r = (flashTime/(initialFlashTime / 2.0));
+		rgb.g = (0.8 * flashTime / (initialFlashTime / 2.0));
+		rgb.b = 0;
+	}
+	else {
+		rgb.r = 1;
+		rgb.g = 0.8;
+		rgb.b = 0;
+	}
+
+	return rgb;
+}
+
 AABBObject* Snail::getaabb()
 {
     return aabb;
 }
 
-
+Bazooka* Snail::getBazooka() {
+	return bazooka;
+}
 
 Snail::~Snail()
 {

@@ -21,6 +21,7 @@
 #include "DrawableElement.h"
 #include "Utils.h"
 #include "Pointer.h"
+#include "RGBflashLight.h"
 
 #include <iostream>
 #include <ctime>
@@ -34,7 +35,7 @@ public:
 	Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool turn, ShaderProgram *sp);
 	virtual ~Snail();
 	void moveSnail(float angle_x, float angle_y, float move_up);
-	void draw(float z);
+	void draw(float z, double r, double g, double b);
 	void rotateSnail(float angle_x, float angly_y, float z);
 	void setBoxes();
 	AABBObject* getaabb();
@@ -42,7 +43,9 @@ public:
 	void setTurn(bool t);
 	void setRandomCoords(int i);
 	void shootBullet(float strength);
-	void countShootingTrajectory(); // to do
+	void countShootingTrajectory(double r, double g, double b);
+	Bazooka* getBazooka();
+	RGBflashLight getRGB(); // pobiera kolory rozb³ysku
 
 protected:
 
@@ -53,6 +56,7 @@ private:
 	bool turn;
 	Pointer* pointer;
 	float HP;
+	void decreaseFlashTime();
 
 	// shooting variables
 	bool shooting;
@@ -61,6 +65,9 @@ private:
 	float angleShooting;
 	float timeShooting;
 	float speedShooting;
+
+	float flashTime;
+	float initialFlashTime;
 };
 
 #endif

@@ -3,10 +3,10 @@
 Camera::Camera()
 {
 	V = glm::lookAt(
-		glm::vec3(0.0f, 3.0f, -5.0f),
+		glm::vec3(0.0f, 10.0f, -5.0f),
 		glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::vec3(0.0f, 1.0f, 0.0f)); //compute view matrix
-	P = glm::perspective(50.0f*PI / 180.0f, 1.0f, 1.0f, 50.0f);
+	P = glm::perspective(70.0f*PI / 180.0f, 1.0f, 1.0f, 50.0f);
 	//ctor
 }
 

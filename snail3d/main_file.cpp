@@ -36,6 +36,7 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "AABBObject.h"
 #include "StrengthBar.h"
 #include "Mountain.h"
+#include "RGBflashLight.h"
 #include <vector>
 
 float speed_x = 0;
@@ -161,6 +162,21 @@ int getActiveSnailIndex(std::vector<Snail*> snails) {
 void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::vector<Snail*> snails) { //  Snail* snail) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//bool explosion = false;
+	RGBflashLight rgb;
+
+	// sprawdz czy wystapil wybuch
+	for (int i = 0; i < snails.size(); i++) {
+		rgb = snails[i]->getRGB();
+
+		if (rgb.r > 0) {
+			//explosion = true;
+			break;
+		}
+	}
+
+	//printf("%lf\n", rgb.r);
+
 	// indeks aktywnego slimaka
 	int active = getActiveSnailIndex(snails);
 
@@ -178,7 +194,7 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 		if (snails[i]->getTurn() == true) {
 			snails[i]->moveSnail(speed_x, speed_y, speed_up);
 		}
-		snails[i]->draw(speed_up);
+		snails[i]->draw(speed_up, rgb.r, rgb.g, rgb.b);
 	}
 
 	/*if (snail->getTurn() == true) {
@@ -187,8 +203,16 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 
 	snail->draw(speed_up);*/
 
+	/*RGBflashLight rgb = snails[active]->getRGB();
+
+	if (rgb.r > 0) {
+		printf("%lf\n", rgb.r);
+		mountain->drawMountain(rgb.r, rgb.g, rgb.b);
+	}*/
+		mountain->drawMountain(rgb.r, rgb.g, rgb.b);
+
 	// narysuj gure
-	mountain->drawMountain();
+	//mountain->drawMountain();
 
 	// narysuj pasek sily
 	if (strength) {
@@ -252,7 +276,6 @@ int main(void)
 		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false, sp));
 		snails[snails.size() - 1]->setRandomCoords(i);
 	}
-	printf("fff2234");
 
 	snails[0]->setTurn(true);
 

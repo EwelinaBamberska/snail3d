@@ -9,7 +9,7 @@ Bazooka::Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName, ShaderProg
 	shooting = false;
 }
 
-void Bazooka::drawBazooka(float z, glm::mat4 snailM) {
+void Bazooka::drawBazooka(float z, glm::mat4 snailM, double r, double g, double b) {
 	// set position
 	angle += z;
 	if(angle > 80.0) angle = 80.0;
@@ -23,10 +23,10 @@ void Bazooka::drawBazooka(float z, glm::mat4 snailM) {
 
 	// draw
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
-	drawTextured();
+	drawTextured(r, g, b);
 
 	if (!shooting) {
-		bullet->drawBullet(M, 0.0f, 0.0f);
+		bullet->drawBullet(M, 0.0f, 0.0f, r, g, b);
 	}
 }
 
@@ -35,8 +35,12 @@ void Bazooka::startShooting() {
 	shootedM = M;
 }
 
-void Bazooka::moveBullet(float x, float y) {
-	bullet->drawBullet(shootedM, x, y);
+void Bazooka::endShooting() {
+	shooting = false;
+}
+
+void Bazooka::moveBullet(float x, float y, double r, double g, double b) {
+	bullet->drawBullet(shootedM, x, y, r, g, b);
 }
 
 float Bazooka::getAngle() {

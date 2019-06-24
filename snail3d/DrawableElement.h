@@ -19,7 +19,8 @@ class DrawableElement
 public:
 	DrawableElement(GLuint t , char* objFileName, ShaderProgram *sp);
 	void drawSolid();
-	void drawTextured();
+	void drawTextured(double rColor, double gColor, double bColor);
+	//void drawTextured();
 	void initTextureDrawing(glm::mat4 P, glm::mat4 V);
 	void initSolidDrawing(glm::mat4 P, glm::mat4 V);
 
@@ -28,6 +29,7 @@ protected:
 	glm::mat4 M;
 	GLuint tex;
 	ShaderProgram* sp;
+	void drawCommon();
 };
 
 #endif

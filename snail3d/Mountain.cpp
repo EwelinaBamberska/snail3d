@@ -4,8 +4,8 @@ Mountain::Mountain(GLuint t, char *objFileName, ShaderProgram* s) : DrawableElem
 	M = glm::translate(M, glm::vec3(0.0f, -3.0f, 0.0f));
 }
 
-void Mountain::drawMountain() {	
+void Mountain::drawMountain(double r, double g, double b) {
 	M = glm::scale(M, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
-	drawTextured();
+	drawTextured(r, g, b);
 }
