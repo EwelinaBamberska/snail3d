@@ -32,7 +32,7 @@
 class Snail : public DrawableElement
 {
 public:
-	Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool turn, ShaderProgram *sp);
+	Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool turn, ShaderProgram *sp, GLuint pointerTex);
 	virtual ~Snail();
 	void moveSnail(float angle_x, float angle_y, float move_up);
 	void draw(float z, double r, double g, double b);

@@ -57,6 +57,8 @@ GLuint bazookaTex;
 GLuint bulletTex;
 GLuint snailTex;
 GLuint mountainTex;
+GLuint blueTex;
+GLuint redTex;
 
 
 //Procedura obs�ugi b��d�w
@@ -133,6 +135,8 @@ void initOpenGLProgram(GLFWwindow* window) {
 	mountainTex = readTexture("models/mountain_tex.png");
 	bazookaTex = readTexture("models/bazooka_tex.png");
 	bulletTex = readTexture("models/bullet_tex.png");
+	blueTex = readTexture("models/blue_texture.png");
+	redTex = readTexture("models/red_texture.png");
 
 	sp = new ShaderProgram("vertex.glsl", NULL, "fragment.glsl");
 }
@@ -241,7 +245,7 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	window = glfwCreateWindow(500, 500, "OpenGL", NULL, NULL);  //Utw�rz okno 500x500 o tytule "OpenGL" i kontekst OpenGL.
+	window = glfwCreateWindow(800, 800, "OpenGL", NULL, NULL);  //Utw�rz okno 500x500 o tytule "OpenGL" i kontekst OpenGL.
 
 	if (!window) //Je�eli okna nie uda�o si� utworzy�, to zamknij program
 	{
@@ -268,12 +272,13 @@ int main(void)
 	Camera* camera = new Camera();
 	char mountainName[] = "models/ground.obj";
 	char snailName[] = "models/snail.obj";
+	char barName[] = "models/strengthbar.obj";
 
 	int i = 0;
 	std::vector<Snail*> snails;
 
 	for (i = 0; i < numberOfSnails; i++) {
-		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false, sp));
+		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false, sp, blueTex));
 		snails[snails.size() - 1]->setRandomCoords(i);
 	}
 
@@ -281,7 +286,7 @@ int main(void)
 
 	Mountain* mountain = new Mountain(mountainTex, mountainName, sp);
 	//Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);//, spLambert);
-	StrengthBar* strenghBar = new StrengthBar(camera, sp);
+	StrengthBar* strenghBar = new StrengthBar(camera, sp, redTex, barName);
 	
 	while (!glfwWindowShouldClose(window)) //Tak d�ugo jak okno nie powinno zosta� zamkni�te
 	{

@@ -20,7 +20,7 @@ public:
 	DrawableElement(GLuint t , char* objFileName, ShaderProgram *sp);
 	void drawSolid();
 	void drawTextured(double rColor, double gColor, double bColor);
-	//void drawTextured();
+	void drawTextured();
 	void initTextureDrawing(glm::mat4 P, glm::mat4 V);
 	void initSolidDrawing(glm::mat4 P, glm::mat4 V);
 

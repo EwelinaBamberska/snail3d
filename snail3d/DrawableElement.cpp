@@ -73,10 +73,10 @@ void DrawableElement::drawTextured(double rColor, double gColor, double bColor) 
 
 }
 
-//void DrawableElement::drawTextured() {
-//	glUniform4f(sp->u("color"), 0, 0, 0, 1);
-//	drawCommon();
-//}
+void DrawableElement::drawTextured() {
+	glUniform4f(sp->u("color"), 0, 0, 0, 1);
+	drawCommon();
+}
 
 void DrawableElement::drawCommon() {
 
