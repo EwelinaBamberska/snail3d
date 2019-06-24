@@ -26,6 +26,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <cstdio>
+#include <cmath>
 
 class Snail : public DrawableElement
 {
@@ -55,8 +56,8 @@ private:
 
 	// shooting variables
 	bool shooting;
-	int yShooting;
-	int xShooting;
+	float yShooting;
+	float xShooting;
 	float angleShooting;
 	float timeShooting;
 	float speedShooting;

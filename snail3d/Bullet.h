@@ -19,7 +19,8 @@ class Bullet : public DrawableElement
 {
 public:
 	Bullet(GLuint t, char* objFileName);
-	void drawBullet(glm::mat4 M);
+	void drawBullet(glm::mat4 M, float x, float y);
+	//void drawShootedBullet(glm::mat4 bazookaM, float x, float y);
 
 private:
 };

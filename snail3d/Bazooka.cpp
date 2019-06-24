@@ -5,6 +5,8 @@ Bazooka::Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName) : Drawable
 
 	char name[] = "models/bullet.obj";
 	bullet = new Bullet(bulletT, name);
+
+	shooting = false;
 }
 
 void Bazooka::drawBazooka(float z, glm::mat4 snailM) {
@@ -21,10 +23,20 @@ void Bazooka::drawBazooka(float z, glm::mat4 snailM) {
 
 	// draw
 	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
-	//drawSolid();
-	//glUniform4f(spLambert->u("color"), 0.5, 0.5, 0.5, 1);
 	drawTextured();
-	bullet->drawBullet(M);
+
+	if (!shooting) {
+		bullet->drawBullet(M, 0.0f, 0.0f);
+	}
+}
+
+void Bazooka::startShooting() {
+	shooting = true;
+	shootedM = M;
+}
+
+void Bazooka::moveBullet(float x, float y) {
+	bullet->drawBullet(shootedM, x, y);
 }
 
 float Bazooka::getAngle() {
