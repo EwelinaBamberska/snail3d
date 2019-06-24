@@ -46,6 +46,9 @@ float strength = 0;
 bool changeActiveSnail = false;
 int numberOfSnails = 5;
 
+float angle_x = 0; //Aktualny k�t obrotu obiektu
+float angle_y = 0; //Aktualny k�t obrotu obiektu
+
 //ShaderProgram *spLambert;
 
 //Uchwyty na tekstury
@@ -168,11 +171,18 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 	for (int i = 0; i < snails.size(); i++) {
 		if (snails[i]->getTurn() == true) {
 			snails[i]->rotateSnail(speed_x);
-			snails[i]->moveSnail(speed_y * 0.006);
-
+			snails[i]->moveSnail(speed_y * 0.01);
+			
+			//obliczanie y
 			float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2]);
 			float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2]);
 			snails[i]->setYPos((translateY1 + translateY2) / 2);
+			mountain->setLastY((translateY1 + translateY2) / 2);
+			snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);  //ustawianie y minimalnego i maksymalnego do kolizji
+			for (int j = 0; j < snails.size(); j++) {
+				if (i != j && snails[i]->getaabb()->check_if_collision(snails[j]->getaabb()))
+					printf("COLLISION %d %d\n", i, j);
+			}
 			printf("%f \n", (translateY1 + translateY2) / 2);
 		}
 
@@ -230,8 +240,6 @@ int main(void)
 	initOpenGLProgram(window); //Operacje inicjuj�ce
 
 	//G��wna p�tla
-	float angle_x = 0; //Aktualny k�t obrotu obiektu
-	float angle_y = 0; //Aktualny k�t obrotu obiektu
 	glfwSetTime(0); //Zeruj timer
 
 	Camera* camera = new Camera();
@@ -254,6 +262,9 @@ int main(void)
 		float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2]);
 		float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2]);
 		snails[i]->setYPos((translateY1 + translateY2) / 2);
+		snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);
+		mountain->setLastY((translateY1 + translateY2) / 2);
+
 	}
 
 	snails[0]->setTurn(true);
@@ -262,8 +273,9 @@ int main(void)
 
 	while (!glfwWindowShouldClose(window)) //Tak d�ugo jak okno nie powinno zosta� zamkni�te
 	{
-		//angle_x += speed_x * glfwGetTime(); //Zwi�ksz/zmniejsz k�t obrotu na podstawie pr�dko�ci i czasu jaki up�yna� od poprzedniej klatki
-		//angle_y += speed_y * glfwGetTime(); //Zwi�ksz/zmniejsz k�t obrotu na podstawie pr�dko�ci i czasu jaki up�yna� od poprzedniej klatki
+		angle_x += speed_x * glfwGetTime(); //Zwi�ksz/zmniejsz k�t obrotu na podstawie pr�dko�ci i czasu jaki up�yna� od poprzedniej klatki
+		angle_y += speed_y * glfwGetTime(); //Zwi�ksz/zmniejsz k�t obrotu na podstawie pr�dko�ci i czasu jaki up�yna� od poprzedniej klatki
+
 		glfwSetTime(0); //Zeruj timer
 		drawScene(window, strenghBar, mountain, snails); // ,snail)		//Wykonaj procedur� rysuj�c�
 		glfwPollEvents(); //Wykonaj procedury callback w zalezno�ci od zdarze� jakie zasz�y.

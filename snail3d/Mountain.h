@@ -22,10 +22,12 @@ public:
 	Mountain(GLuint t, char *objFileName);
 	void drawMountain();
 	float getYPosition(float x, float z);
+	void setLastY(float y);
 
 private:
 	float scale = 1.0f;
-	float translate = 0.0f;
+	float translate = -2.0f;
+	float lasty;
 };
 
 

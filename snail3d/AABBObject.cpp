@@ -17,12 +17,14 @@ void AABBObject::setmaxes(float x, float y, float z) {
 	maxes[0] = x;
 	maxes[1] = y;
 	maxes[2] = z;
+	maxy = y;
 }
 
 void AABBObject::setmins(float x, float y, float z) {
 	mins[0] = x;
 	mins[1] = y;
 	mins[2] = z;
+	miny = y;
 }
 
 void AABBObject::setz(float minz, float maxz) {
@@ -35,9 +37,9 @@ void AABBObject::setx(float minx, float maxx) {
 	mins[0] = minx;
 }
 
-void AABBObject::sety(float miny, float maxy) {
-	maxes[1] = maxy;
-	mins[1] = miny;
+void AABBObject::sety(float y1) {
+	maxes[1] = maxy + y1;
+	mins[1] = miny + y1;
 }
 
 float* AABBObject::getmaxes() {

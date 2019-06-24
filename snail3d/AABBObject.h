@@ -25,7 +25,7 @@ public:
 	void setmins(float x, float y, float z);
 	void setz(float minz, float maxz);
 	void setx(float minz, float maxz);
-	void sety(float minz, float maxz);
+	void sety(float minz);
 	float* getmaxes();
 	float* getmins();
 	bool check_if_collision(AABBObject* object);
@@ -34,6 +34,7 @@ protected:
 private:
 	float maxes[3];
 	float mins[3];
+	float miny, maxy;
 };
 
 #endif // AABBOBJECT_H

@@ -23,4 +23,18 @@ static float getMax(float a, float b, float c) {
 	if (b >= a && b >= c)	return b;
 	else	return c;
 }
+
+static float countA(float x1, float x2, float z1, float z2) {
+	return (z2 - z1) / (x2 - x1);
+}
+
+static float countB(float x1, float z1, float a) {
+	return z1 - a * x1;
+}
+
+static float area(float x1, float y1, float x2, float y2, float x3, float y3)
+{
+	return abs((x1*(y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0);
+}
+
 #endif

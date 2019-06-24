@@ -24,8 +24,6 @@ void Snail::setRandomCoords(int i) {
 void Snail::moveSnail(float y)
 {
 	M = glm::translate(M, glm::vec3(0.0f, 0.0f, 1.0f * y)); //Compute model matrix	
-	float oldmin = sqrt(pow(aabb->getmins()[1], 2) - pow(aabb->getmins()[2], 2));
-	float oldmax = sqrt(pow(aabb->getmaxes()[1], 2) - pow(aabb->getmaxes()[2], 2));
 	aabb->setz(aabb->getmins()[2] + cos(angleOfSnail * PI / 180) * (y), aabb->getmaxes()[2] + cos(angleOfSnail * PI / 180) * (y));
 	aabb->setx(aabb->getmins()[0] + sin(angleOfSnail * PI / 180) * (y), aabb->getmaxes()[0] + sin(angleOfSnail * PI / 180) * (y));
 	xpos += sin(angleOfSnail * PI / 180) * y;

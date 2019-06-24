@@ -51,6 +51,8 @@ private:
 	float angleOfSnail = 0.0f;
 	float xpos = 0.0f, zpos = 0.0f;
 	float ypos;
+	float xcoord, ycoord;
+	glm::mat4 tmpM;
 };
 
 #endif
