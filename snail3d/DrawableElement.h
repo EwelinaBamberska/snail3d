@@ -24,7 +24,7 @@ public:
 	void drawTextured();
 	void initTextureDrawing(glm::mat4 P, glm::mat4 V);
 	void initSolidDrawing(glm::mat4 P, glm::mat4 V);
-
+	void drawTextured(double r, double g, double b);
 	void setBoxes();
 	AABBObject* getaabb();
 
@@ -34,6 +34,7 @@ protected:
 	AABBObject* aabb;
 	ShaderProgram* sp;
 	GLuint tex;
+	void drawCommon();
 };
 
 #endif

@@ -19,10 +19,13 @@ class Bullet : public DrawableElement
 {
 public:
 	Bullet(GLuint t, char* objFileName, ShaderProgram* sp);
-	void drawBullet(glm::mat4 M, float x, float y);
+	void drawBullet(float x, float y, int angle);
 	//void drawShootedBullet(glm::mat4 bazookaM, float x, float y);
+	void resetBullet(glm::mat4 M);
+	void translateOfM(glm::mat4 snailM);
 
 private:
+	float previousx, previousy;
 };
 
 #endif

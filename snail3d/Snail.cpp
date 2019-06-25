@@ -7,7 +7,7 @@ Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, G
 	camera = c;
 
 	char pointerName[] = "models/pointer.obj";
-	pointer = new Pointer(pointerName, NULL, sp);
+	pointer = new Pointer(pointerName, blueTex, sp);
 
 	char name[] = "models/bazooka.obj";
 	bazooka = new Bazooka(bazookaTex, bulletTex, name, sp);
@@ -15,6 +15,9 @@ Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, G
 	char healthName[] = "models/strengthbar.obj";
 	healthBar = new HealthBar(blueTex, healthName, sp);
 	actualLife = new HealthBar(redTex, healthName, sp);
+	initialFlashTime = 5.0f;
+	flashTime = 0.0f;
+	lastY = 0.0f;
 }
 
 void Snail::setRandomCoords(int i) {
@@ -22,8 +25,11 @@ void Snail::setRandomCoords(int i) {
 	float ycoord = -4.0f + randomFloat(0.0f, 8.0f);
 	aabb->move(xcoord, 0.0f, ycoord);
 	printf("%f, %f \n", xcoord, ycoord);
-	bazooka->getBullet()->getaabb()->move(xcoord, 0.0f, ycoord);
+	
 	M = glm::translate(M, glm::vec3(xcoord, 0.0f, ycoord));
+	bazooka->translateBazooka(xcoord, ycoord);
+	bazooka->getBullet()->resetBullet(bazooka->getM());
+	bazooka->getBullet()->getaabb()->moveOn(xcoord * 5.0f, 0.0f, ycoord * 5.0f);
 	//float randomAngle = 2 * PI * randomFloat(0.0f, 1.0f);
 	//M = glm::rotate(M, randomAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 	//angleOfSnail +=  randomAngle * PI * 180.0f;
@@ -38,7 +44,12 @@ void Snail::moveSnail(float y)
 
 	if (angle == 0) {
 		aabb->setz(y, y);
+
+		//printf("Z %f %f \n", aabb->getmins()[2], aabb->getmaxes()[2]);
 		bazooka->getBullet()->getaabb()->setz(y, y);
+		//printf("Z %f %f \n", bazooka->getBullet()->getaabb()->getmins()[2], bazooka->getBullet()->getaabb()->getmaxes()[2]);
+		//printf("Z %f %f \n", bazooka->getBullet()->getaabb()->getmins()[2] + y, bazooka->getBullet()->getaabb()->getmaxes()[2]);
+
 	}
 	else if (angle == 3) {
 		aabb->setx(y, y);
@@ -72,28 +83,32 @@ void Snail::rotateSnail(int x)
 
 }
 
-void Snail::draw(float z)
+void Snail::draw(float z, double r, double g, double b)
 {
 	//z = 0.1 * z;
 	z = turn == true ? 0.1 * z : 0;
-
+	decreaseFlashTime();
 
 	// for solids
 	//initSolidDrawing(camera->getP(), camera->getV());
 
+	
+	initTextureDrawing(camera->getP(), camera->getV());
+	glm::mat4 M1 = glm::translate(M, glm::vec3(0.0f, lastY, 0.0f));
 	if (turn == true) {
 		initSolidDrawing(camera->getP(), camera->getV());
-		pointer->drawAboveSnail(M);
+		pointer->drawAboveSnail(M1);
 	}
-	initTextureDrawing(camera->getP(), camera->getV());
-	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
+	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M1));
+	
 	drawTextured();
-	bazooka->drawBazooka(z, M);
-	healthBar->drawHealthBar(M, 2.0f);
-	actualLife->drawHealthBar(M, 2.2f);
+	bazooka->drawBazooka(z, M1, angle);
+	healthBar->drawHealthBar(M1, 2.0f);
+	actualLife->drawHealthBar(M1, 2.2f);
 	if (shooting == true) {
 		countShootingTrajectory();
 	}
+
 }
 
 
@@ -106,14 +121,23 @@ void Snail::shootBullet(float strength) {
 	speedShooting = log(strength) / log(2) * 4;
 	printf("angle: %f ----- speed: %f ---- cosinus: %f, ----- sinus: %f\n", angleShooting, speedShooting, cos(angleShooting * PI / 180), sin(angleShooting * PI / 180));
 	bazooka->startShooting();
+	bazooka->getBullet()->resetBullet(bazooka->getM());
+	bazooka->getBullet()->getaabb()->moveOn((aabb->getmins()[0] + aabb->getmaxes()[0]) / 2, (aabb->getmins()[1] + aabb->getmaxes()[1]) / 2, (aabb->getmins()[2] + aabb->getmaxes()[2]) / 2);
 }
 
 void Snail::countShootingTrajectory() {
-	xShooting = speedShooting * timeShooting * cos(angleShooting * PI / 180) * 1.8f;
-	yShooting = speedShooting * timeShooting * sin(angleShooting * PI / 180) + 3.0f - 0.5f * 9.806f * pow(timeShooting, 2);
-	timeShooting += 0.01f;
-	
-	bazooka->moveBullet(xShooting, yShooting);
+	xShooting = speedShooting * timeShooting * cos(angleShooting * PI / 180) * 1.0f;
+	yShooting = speedShooting * timeShooting * sin(angleShooting * PI / 180) + 0.0f - 0.5f * 9.806f * pow(timeShooting, 2);
+	timeShooting += 0.001f;
+	//printf("--- %f, %f\n", xShooting, yShooting);
+	bazooka->moveBullet(xShooting, yShooting, angle);
+
+	if (yShooting < 0.0f) {
+		shooting = false;
+		bazooka->endShooting();
+		flashTime = initialFlashTime;
+		printf("DZIALA\n");
+	}
 }
 
 void Snail::setYPos(float y) {
@@ -160,4 +184,44 @@ void Snail::loseLife() {
 
 bool Snail::getIfLive() {
 	return ifLive;
+}
+
+float Snail::getTimeShooting() {
+	return timeShooting;
+}
+
+
+void Snail::decreaseFlashTime() {
+	if (flashTime > 0.0f) flashTime -= 0.01f;
+}
+
+RGBflashLight Snail::getRGB() {
+	RGBflashLight rgb;
+	//printf("%f\n", flashTime);
+
+	if (flashTime <= 0.0f) {
+		rgb.r = 0;
+		rgb.g = 0;
+		rgb.b = 0;
+	}
+	else if (flashTime <= initialFlashTime / 2.0) {
+		rgb.r = (flashTime / (initialFlashTime / 2.0));
+		rgb.g = (0.8 * flashTime / (initialFlashTime / 2.0));
+		rgb.b = 0;
+	}
+	else {
+		rgb.r = 1;
+		rgb.g = 0.8;
+		rgb.b = 0;
+	}
+
+	return rgb;
+}
+
+void Snail::setLastY(float y) {
+	lastY = y;
+}
+
+float Snail::getLasty() {
+	return lastY;
 }

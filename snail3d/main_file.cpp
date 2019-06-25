@@ -84,7 +84,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		if (key == GLFW_KEY_S) speed_y = 0;
 		if (key == GLFW_KEY_UP) speed_up = 0;
 		if (key == GLFW_KEY_DOWN) speed_up = 0;
-		if (key == GLFW_KEY_SPACE) {
+		if ( key == GLFW_KEY_SPACE) {
 			strength = 0;
 			strengthReleased = true;
 		}		
@@ -125,7 +125,7 @@ GLuint readTexture(const char* filename) {
 }
 
 void initOpenGLProgram(GLFWwindow* window) {
-	initShaders();
+	//initShaders();
 	glClearColor(0, 0, 0, 1);
 	glEnable(GL_DEPTH_TEST);
 	glfwSetWindowSizeCallback(window, windowResizeCallback);
@@ -143,7 +143,7 @@ void initOpenGLProgram(GLFWwindow* window) {
 
 //Release resources allocated by the program
 void freeOpenGLProgram(GLFWwindow* window) {
-	freeShaders();
+	//freeShaders();
 
 	glDeleteTextures(1, &bazookaTex);
 	glDeleteTextures(1, &bulletTex);
@@ -167,9 +167,17 @@ int getActiveSnailIndex(std::vector<Snail*> snails) {
 void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::vector<Snail*> snails) { //  Snail* snail) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	RGBflashLight rgb;
+
+	for (int i = 0; i < snails.size(); i++) {
+		rgb = snails[i]->getRGB();
+		if (rgb.r > 0) {
+			break;
+		}
+	}
 
 	// narysuj gure
-	mountain->drawMountain();
+	mountain->drawMountain(rgb.r, rgb.g, rgb.b);
 
 	int active = getActiveSnailIndex(snails);
 
@@ -184,49 +192,51 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 
 	// narysuj slimaki
 	for (int i = 0; i < snails.size(); i++) {
-		if (snails[i]->getTurn() == true) {
-			snails[i]->rotateSnail(speed_x);
-			speed_x = 0;
-			snails[i]->moveSnail(speed_y * 0.005);
-			//if (speed_y) {
-			//	//obliczanie y
-			//	float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle());
-			//	float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle());
-			//	snails[i]->setYPos((translateY1 + translateY2) / 2);
-			//	mountain->setLastY((translateY1 + translateY2) / 2);
-			//	snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);  //ustawianie y minimalnego i maksymalnego do kolizji
-			//}
-			if (snails[i]->getShooting()) {
-				for (int j = 0; j < snails.size(); j++) {
-					//printf("%d X min %f max %f, \t Z min %f max %f\n",j, snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getaabb()->getmaxes()[2]);
-					//printf("SPRAWDZA\n");
-					if (i != j && snails[i]->getBazooka()->getBullet()->getaabb()->check_if_collision(snails[j]->getaabb())) {
-						snails[j]->loseLife();
-						printf("%d X min %f max %f, \t Z min %f max %f\n",j, snails[j]->getaabb()->getmins()[0], snails[j]->getaabb()->getmaxes()[0], snails[j]->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
-						printf("bullet %d X min %f max %f, \t Z min %f max %f\n", j, snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmaxes()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
+		if (snails[i]->getIfLive()) {
+			if (snails[i]->getTurn() == true) {
+				snails[i]->rotateSnail(speed_x);
+				speed_x = 0;
+				snails[i]->moveSnail(speed_y * 0.005);
+				//if (speed_y) {
+				//	//obliczanie y
+				float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle(), snails[i]->getLasty());
+				float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle(), snails[i]->getLasty());
+				//printf("%f %f\n", translateY1, translateY2);
+				//snails[i]->setYPos((translateY1 + translateY2) / 2);
+				float max = translateY1 > translateY2 ? translateY1 : translateY2;
+				snails[i]->setLastY(max);
+				snails[i]->getaabb()->sety(max);
+				snails[i]->getBazooka()->getBullet()->getaabb()->sety(max);
+				//}
+				if (snails[i]->getShooting()) {
+					for (int j = 0; j < snails.size(); j++) {
+						//printf("%d X min %f max %f, \t Z min %f max %f\n",j, snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getaabb()->getmaxes()[2]);
+						//printf("SPRAWDZA\n");
+						if (i != j && snails[j]->getIfLive() && snails[i]->getBazooka()->getBullet()->getaabb()->check_if_collision(snails[j]->getaabb())) {
+							snails[j]->loseLife();
+							//printf("%d X min %f max %f, \t Z min %f max %f\n", j, snails[j]->getaabb()->getmins()[0], snails[j]->getaabb()->getmaxes()[0], snails[j]->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
+							//printf("bullet %d X min %f max %f, \t Z min %f max %f\n", j, snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmaxes()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
 
-						printf("KOLIZJA Z %d\n", j);
-						snails[i]->setShooting();
-						break;
+							printf("KOLIZJA Z %d\n", j);
+							snails[i]->setShooting();
+							shooting = false;
+							//changeActiveSnail = true;
+							break;
+						}
 					}
 				}
-			}
 
+			}
+			snails[i]->draw(speed_up, rgb.r, rgb.g, rgb.b);
+			if (shooting) {
+				if (snails[i]->getTimeShooting() > 10.0f) {
+					snails[i]->setShooting();
+					//changeActiveSnail = true;
+					shooting = false;
+				}
+			}
 		}
-		snails[i]->draw(speed_up);
-		/*if (shooting) {
-			if (snails[i]->getBazooka()->getBullet()->getaabb()->getmaxes()[1] < -5.0f) {
-				snails[i]->setShooting();
-				shooting = false;
-			}
-		}*/
 	}
-
-	/*if (snail->getTurn() == true) {
-		snail->moveSnail(speed_x, speed_y, speed_up);
-	}
-	snail->draw(speed_up);*/
-
 
 	// narysuj pasek sily
 	if (strength) {
@@ -235,7 +245,7 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 	else {
 		if (strengthReleased) {
 			strengthReleased = false;
-			//shooting = true;
+			shooting = true;
 			snails[active]->shootBullet(bar->getLength());
 		}
 		strength = 0;
@@ -296,12 +306,11 @@ int main(void)
 
 		snails[snails.size() - 1]->setRandomCoords(i);
 
-		//float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle());
-		//float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle());
+		float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle(), snails[i]->getLasty());
+		float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle(), snails[i]->getLasty());
 		//snails[i]->setYPos((translateY1 + translateY2) / 2);
-		//snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);
-		//mountain->setLastY((translateY1 + translateY2) / 2);
-
+		snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);
+		snails[i]->setLastY((translateY1 + translateY2) / 2);
 	}
 
 	snails[0]->setTurn(true);

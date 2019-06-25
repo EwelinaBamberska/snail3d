@@ -45,28 +45,9 @@ void DrawableElement::initSolidDrawing(glm::mat4 P, glm::mat4 V) {
 	glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
 }
 
-void DrawableElement::drawTextured() {
-	/*
-	glEnableVertexAttribArray(sp->a("vertex"));
-	glVertexAttribPointer(sp->a("vertex"), 4, GL_FLOAT, false, 0, modelObj->get_vertices());
-
-	glEnableVertexAttribArray(sp->a("texCoord"));
-	glVertexAttribPointer(sp->a("texCoord"), 2, GL_FLOAT, false, 0, modelObj->get_texCoords());
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex);
-	glUniform1i(sp->u("tex"), 0);
-
-	glDrawArrays(GL_TRIANGLES, 0, modelObj->getVNumber());
-
-	glDisableVertexAttribArray(sp->a("vertex"));
-	glDisableVertexAttribArray(sp->a("texCoord"));*/
-
-	//sp->use();//Aktywacja programu cieniuj�cego
-	//Przeslij parametry programu cieniuj�cego do karty graficznej
-	//glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
-	glUniform4f(sp->u("lp"), 0, 5, -6, 1); //Wsp�rz�dne �r�d�a �wiat�a
-
+void DrawableElement::drawCommon() {
+	glUniform4f(sp->u("lp"), 0, 10, -6, 0.8); //Wsp�rz�dne �r�d�a �wiat�a
+	glUniform4f(sp->u("lp2"), 0, 0, 1, 1);
 	glUniform1i(sp->u("textureMap0"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tex);
@@ -91,6 +72,35 @@ void DrawableElement::drawTextured() {
 	glDisableVertexAttribArray(sp->a("normal"));  //Wy��cz przesy�anie danych do atrybutu normal
 	glDisableVertexAttribArray(sp->a("texCoord0"));  //Wy��cz przesy�anie danych do atrybutu texCoord0
 
+}
+
+void DrawableElement::drawTextured(double r, double g, double b) {
+	glUniform4f(sp->u("color"), r, g, b, 1);
+	drawCommon();
+}
+
+void DrawableElement::drawTextured() {
+	/*
+	glEnableVertexAttribArray(sp->a("vertex"));
+	glVertexAttribPointer(sp->a("vertex"), 4, GL_FLOAT, false, 0, modelObj->get_vertices());
+
+	glEnableVertexAttribArray(sp->a("texCoord"));
+	glVertexAttribPointer(sp->a("texCoord"), 2, GL_FLOAT, false, 0, modelObj->get_texCoords());
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tex);
+	glUniform1i(sp->u("tex"), 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, modelObj->getVNumber());
+
+	glDisableVertexAttribArray(sp->a("vertex"));
+	glDisableVertexAttribArray(sp->a("texCoord"));*/
+
+	//sp->use();//Aktywacja programu cieniuj�cego
+	//Przeslij parametry programu cieniuj�cego do karty graficznej
+	//glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
+	glUniform4f(sp->u("color"), 0, 0, 0, 1);
+	drawCommon();
 }
 
 

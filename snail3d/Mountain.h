@@ -20,7 +20,7 @@ class Mountain : public DrawableElement
 {
 public:
 	Mountain(GLuint t, char *objFileName, ShaderProgram* sp);
-	void drawMountain();
+	void drawMountain(double r, double g, double b);
 	float getYPosition(float x, float z, int alpha, float lasty);
 
 private:

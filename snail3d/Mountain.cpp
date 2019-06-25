@@ -6,9 +6,9 @@ Mountain::Mountain(GLuint t, char *objFileName, ShaderProgram* s) : DrawableElem
 	M = glm::scale(M, glm::vec3(scale, scale, scale));
 }
 
-void Mountain::drawMountain() {
+void Mountain::drawMountain(double r, double g, double b) {
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
-	drawTextured();
+	drawTextured(r, g, b);
 }
 
 bool checkIfInsideTriangle(float x1, float x2, float x3, float z1, float z2, float z3, float xcheck, float zcheck) {
@@ -49,13 +49,12 @@ float Mountain::getYPosition(float x, float z, int alph, float lasty) {
 	else if (alph == 2)	n_alpha = 180.0;
 	else n_alpha = 270.0f;
 	for (int i = 0; i < modelObj->getVNumber() *4; i += 12) {
-		
-			x1c = verts[i] * scale * cos(n_alpha * PI / 180.0) - verts[i + 2] * scale * sin(n_alpha * PI / 180.0);
-			x2c = verts[i + 4] * scale * cos(n_alpha * PI / 180.0) - verts[i + 6] * scale * sin(n_alpha * PI / 180.0);
-			x3c = verts[i + 8] * scale * cos(n_alpha * PI / 180.0) - verts[i + 10] * scale * sin(n_alpha * PI / 180.0);
-			z1c = verts[i + 2] * scale * cos(n_alpha * PI / 180.0) + verts[i] * scale * sin(n_alpha * PI / 180.0);
-			z2c = verts[i + 6] * scale * cos(n_alpha * PI / 180.0) + verts[i + 4] * scale * sin(n_alpha * PI / 180.0);
-			z3c = verts[i + 10] * scale * cos(n_alpha * PI / 180.0) + verts[i + 8] * scale * sin(n_alpha * PI / 180.0);
+		x1c = verts[i] * scale * cos(n_alpha * PI / 180.0) - verts[i + 2] * scale * sin(n_alpha * PI / 180.0);
+		x2c = verts[i + 4] * scale * cos(n_alpha * PI / 180.0) - verts[i + 6] * scale * sin(n_alpha * PI / 180.0);
+		x3c = verts[i + 8] * scale * cos(n_alpha * PI / 180.0) - verts[i + 10] * scale * sin(n_alpha * PI / 180.0);
+		z1c = verts[i + 2] * scale * cos(n_alpha * PI / 180.0) + verts[i] * scale * sin(n_alpha * PI / 180.0);
+		z2c = verts[i + 6] * scale * cos(n_alpha * PI / 180.0) + verts[i + 4] * scale * sin(n_alpha * PI / 180.0);
+		z3c = verts[i + 10] * scale * cos(n_alpha * PI / 180.0) + verts[i + 8] * scale * sin(n_alpha * PI / 180.0);
 		if (checkIfInsideTriangle(x1c, x2c, x3c, z1c, z2c, z3c, x, z)) {
 			beta = ((z - z1c) * (x2c - x1c) - (x - x1c) * (z2c - z1c)) / (z3c - z1c - (x3c - x1c) * (z2c - z1c));
 			//beta = ((z - verts[i + 2] * scale) * (verts[i + 4] * scale - verts[i] * scale) -
