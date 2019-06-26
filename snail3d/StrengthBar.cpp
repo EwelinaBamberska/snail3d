@@ -23,8 +23,8 @@ void StrengthBar::draw(float s)
 	length += s;
 	if (length > maxLength)	length = 0.0f;
 
-	glm::mat4 newM = glm::translate(M, glm::vec3(0.0f, 3.0f, -5.0f));
-	newM = glm::scale(newM, glm::vec3(1.5f * length / 100.0f, 0.2f, 0.2f));
+	glm::mat4 newM = glm::translate(M, glm::vec3(0.0f, 6.0f, -2.5f));
+	newM = glm::scale(newM, glm::vec3(1.5f * length / 100.0f, 0.002f, 1.8f));
 
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(newM));
 	drawTextured();

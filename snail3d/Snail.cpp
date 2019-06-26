@@ -19,6 +19,7 @@ Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, G
 	initialFlashTime = 5.0f;
 	flashTime = 0.0f;
 	lastY = 0.0f;
+	wind = 0.0f;
 }
 
 void Snail::setRandomCoords(int i) {
@@ -120,6 +121,7 @@ void Snail::shootBullet(float strength) {
 	angleShooting = bazooka->getAngle() + 10.0f;
 	timeShooting = 0.0f;
 	speedShooting = log(strength) / log(2) * 6;
+	wind = randomFloat(0.0f, 3.0f) - 1.5f;
 	//printf("angle: %f ----- speed: %f ---- cosinus: %f, ----- sinus: %f\n", angleShooting, speedShooting, cos(angleShooting * PI / 180), sin(angleShooting * PI / 180));
 	bazooka->startShooting();
 	bazooka->getBullet()->resetBullet(bazooka->getM());
@@ -127,12 +129,12 @@ void Snail::shootBullet(float strength) {
 }
 
 void Snail::countShootingTrajectory(double r, double g, double b) {
-	xShooting = speedShooting * timeShooting * cos(angleShooting * PI / 180) * 1.0f;
+	xShooting = speedShooting * timeShooting * cos(angleShooting * PI / 180) * 1.0f + wind;
 	yShooting = speedShooting * timeShooting * sin(angleShooting * PI / 180) + 0.0f - 0.5f * 9.806f * pow(timeShooting, 2);
 	timeShooting += 0.003f;
 	//printf("--- %f, %f\n", xShooting, yShooting);
 	bazooka->moveBullet(xShooting, yShooting, angle, r, g, b);
-	if (timeShooting > 1.0f || bazooka->getBullet()->getDroping() && yShooting < mountain->getYPosition(bazooka->getBullet()->getaabb()->getmaxes()[0], bazooka->getBullet()->getaabb()->getmaxes()[2], angle, bazooka->getBullet()->getlastymax()) &&
+	if (timeShooting > 1.0f && bazooka->getBullet()->getDroping() || bazooka->getBullet()->getDroping() && yShooting < mountain->getYPosition(bazooka->getBullet()->getaabb()->getmaxes()[0], bazooka->getBullet()->getaabb()->getmaxes()[2], angle, bazooka->getBullet()->getlastymax()) &&
 		yShooting > mountain->getYPosition(bazooka->getBullet()->getaabb()->getmins()[0], bazooka->getBullet()->getaabb()->getmins()[2], angle, bazooka->getBullet()->getlastymin())
 		|| yShooting < -0.4f) {
 		//printf("%f %f\n", mountain->getYPosition(bazooka->getBullet()->getaabb()->getmaxes()[0], bazooka->getBullet()->getaabb()->getmaxes()[2], angle, bazooka->getBullet()->getlastymax()), mountain->getYPosition(bazooka->getBullet()->getaabb()->getmins()[0], bazooka->getBullet()->getaabb()->getmins()[2], angle, bazooka->getBullet()->getlastymin()));
@@ -140,6 +142,7 @@ void Snail::countShootingTrajectory(double r, double g, double b) {
 		bazooka->endShooting();
 		flashTime = initialFlashTime;
 		bazooka->getBullet()->resetBullet(bazooka->getM());
+		stop = true;
 		//printf("DZIALA\n");
 	}
 }
@@ -228,4 +231,12 @@ void Snail::setLastY(float y) {
 
 float Snail::getLasty() {
 	return lastY;
+}
+
+void Snail::setStop() {
+	stop = false;
+}
+
+bool Snail::getStop() {
+	return stop;
 }

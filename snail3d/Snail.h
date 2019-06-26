@@ -55,6 +55,8 @@ public:
 	RGBflashLight getRGB(); // pobiera kolory rozb�ysku
 	void setLastY(float y);
 	float getLasty();
+	bool getStop();
+	void setStop();
 
 protected:
 
@@ -91,8 +93,8 @@ private:
 
 	float flashTime;
 	float initialFlashTime;
-	
-
+	bool stop = false;
+	float wind;
 };
 
 #endif

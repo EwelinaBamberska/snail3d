@@ -184,17 +184,20 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 	// na przycisk "TAB" zmien aktywnego slimaka
 	if (changeActiveSnail == true) {
 		changeActiveSnail = false;
-
-		snails[active]->setTurn(false);
-		snails[(active + 1) % 5]->setTurn(true);
-		active = (active + 1) % 5;
+		while (1) {
+			snails[active]->setTurn(false);
+			snails[(active + 1) % 5]->setTurn(true);
+			active = (active + 1) % 5;
+			if (snails[active]->getIfLive())
+				break;
+		}
 	}
 
 	// narysuj slimaki
 	if (shooting){
-	speed_up = 0.0f;
-	speed_x = 0.0f;
-	speed_y = 0.0f;
+		speed_up = 0.0f;
+		speed_x = 0.0f;
+		speed_y = 0.0f;
 	}
 	for (int i = 0; i < snails.size(); i++) {
 		if (snails[i]->getIfLive()) {
@@ -236,8 +239,9 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 			}
 			snails[i]->draw(speed_up, rgb.r, rgb.g, rgb.b);
 			if (shooting) {
-				if (snails[i]->getTimeShooting() > 2.0f  || !snails[i]->getShooting()) {
+				if (snails[i]->getStop() || !snails[i]->getShooting()) {
 					snails[i]->setShooting();
+					snails[i]->setStop();
 					shooting = false;
 					//printf("KONIEC\n");
 					//changeActiveSnail = true;
