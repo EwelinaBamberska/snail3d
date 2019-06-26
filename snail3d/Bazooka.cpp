@@ -10,11 +10,11 @@ Bazooka::Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName, ShaderProg
 	shooting = false;
 }
 
-void Bazooka::drawBazooka(float z, glm::mat4 snailM, int angl) {
+void Bazooka::drawBazooka(float z, glm::mat4 snailM, int angl, double r, double g, double b) {
 	// set position
 	angle += z;
 	if (angle > 80.0) angle = 80.0;
-	if (angle < -20.0) angle = -20.0;
+	if (angle < 0.0) angle = 0.0;
 	float angle_conversed = angle * 2 * PI / 360;
 
 	M = glm::translate(snailM, glm::vec3(0.3f, 0.3f, 0.0f));
@@ -24,11 +24,11 @@ void Bazooka::drawBazooka(float z, glm::mat4 snailM, int angl) {
 
 	// draw
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
-	drawTextured();
+	drawTextured(r, g, b);
 
 	if (!shooting) {
 		bullet->translateOfM(M);
-		bullet->drawBullet( 0.0f, 0.0f, angl);
+		bullet->drawBullet( 0.0f, 0.0f, angl, r, g, b);
 	}
 }
 
@@ -42,13 +42,13 @@ void Bazooka::startShooting() {
 
 }
 
-void Bazooka::moveBullet(float x, float y, int angle) {
+void Bazooka::moveBullet(float x, float y, int angle, double r, double g, double b) {
 	//printf("BAZO %d\n", bullet->getExplosion());
 	if (bullet->getExplosion()) {
 		bullet->drawExplosion();
 
 	}
-	bullet->drawBullet(x, y, angle);
+	bullet->drawBullet(x, y, angle, r, g, b);
 }
 
 float Bazooka::getAngle() {

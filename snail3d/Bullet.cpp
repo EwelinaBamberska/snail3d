@@ -14,7 +14,7 @@ Bullet::Bullet(GLuint t, char* objFileName, ShaderProgram *sp) : DrawableElement
 }
 
 void Bullet::countScaling() {
-	scaling = sqrt(1.0f + ((timeOfExplosion * 2.0f) / 7.0f));//(5.0f - (5.0f - timeOfExplosion / 2));
+	scaling = sqrt(sqrt(1.0f + ((timeOfExplosion * 2.0f) / 7.0f)));//(5.0f - (5.0f - timeOfExplosion / 2));
 }
 
 void Bullet::resetBullet(glm::mat4 bazookaM) {
@@ -35,7 +35,7 @@ void Bullet::resetBullet(glm::mat4 bazookaM) {
 void Bullet::drawExplosion() {
 	countScaling();
 	M = glm::scale(M, glm::vec3(scaling, scaling, scaling));
-	printf("SCALING %f\n", scaling);
+	//printf("SCALING %f\n", scaling);
 	timeOfExplosion += 0.01f;
 	if (timeOfExplosion > 5.0f) {
 		explosion = false;
@@ -50,7 +50,7 @@ void Bullet::translateOfM(glm::mat4 snailM) {
 	M = glm::scale(M, glm::vec3(0.5f, 0.5f, 0.5f));
 }
 
-void Bullet::drawBullet(float x, float y, int angle) {
+void Bullet::drawBullet(float x, float y, int angle, double r, double g, double b) {
 
 	M = glm::translate(M, glm::vec3(0.0f, (y - previousy) , (x - previousx)));
 	//printf("%f, %f\n", x, y);
@@ -81,7 +81,7 @@ void Bullet::drawBullet(float x, float y, int angle) {
 	previousy = y;
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
 
-	drawTextured();
+	drawTextured(r, g, b);
 
 }
 

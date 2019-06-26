@@ -25,7 +25,7 @@ void Snail::setRandomCoords(int i) {
 	float xcoord = -4.0f + randomFloat(0.0f, 8.0f);
 	float ycoord = -4.0f + randomFloat(0.0f, 8.0f);
 	aabb->move(xcoord, 0.0f, ycoord);
-	printf("%f, %f \n", xcoord, ycoord);
+	//printf("%f, %f \n", xcoord, ycoord);
 	
 	M = glm::translate(M, glm::vec3(xcoord, 0.0f, ycoord));
 	bazooka->translateBazooka(xcoord, ycoord);
@@ -102,12 +102,12 @@ void Snail::draw(float z, double r, double g, double b)
 	}
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M1));
 	
-	drawTextured();
-	bazooka->drawBazooka(z, M1, angle);
+	drawTextured(r, g, b);
+	bazooka->drawBazooka(z, M1, angle, r, g, b);
 	healthBar->drawHealthBar(M1, 2.0f);
 	actualLife->drawHealthBar(M1, 2.2f);
 	if (shooting == true || bazooka->getBullet()->getExplosion()) {
-		countShootingTrajectory();
+		countShootingTrajectory(r, g, b);
 	}
 
 }
@@ -120,27 +120,27 @@ void Snail::shootBullet(float strength) {
 	angleShooting = bazooka->getAngle() + 10.0f;
 	timeShooting = 0.0f;
 	speedShooting = log(strength) / log(2) * 6;
-	printf("angle: %f ----- speed: %f ---- cosinus: %f, ----- sinus: %f\n", angleShooting, speedShooting, cos(angleShooting * PI / 180), sin(angleShooting * PI / 180));
+	//printf("angle: %f ----- speed: %f ---- cosinus: %f, ----- sinus: %f\n", angleShooting, speedShooting, cos(angleShooting * PI / 180), sin(angleShooting * PI / 180));
 	bazooka->startShooting();
 	bazooka->getBullet()->resetBullet(bazooka->getM());
 	bazooka->getBullet()->getaabb()->moveOn((aabb->getmins()[0] + aabb->getmaxes()[0]) / 2, (aabb->getmins()[1] + aabb->getmaxes()[1]) / 2, (aabb->getmins()[2] + aabb->getmaxes()[2]) / 2);
 }
 
-void Snail::countShootingTrajectory() {
+void Snail::countShootingTrajectory(double r, double g, double b) {
 	xShooting = speedShooting * timeShooting * cos(angleShooting * PI / 180) * 1.0f;
 	yShooting = speedShooting * timeShooting * sin(angleShooting * PI / 180) + 0.0f - 0.5f * 9.806f * pow(timeShooting, 2);
-	timeShooting += 0.004f;
+	timeShooting += 0.003f;
 	//printf("--- %f, %f\n", xShooting, yShooting);
-	bazooka->moveBullet(xShooting, yShooting, angle);
-	if (bazooka->getBullet()->getDroping() && yShooting < mountain->getYPosition(bazooka->getBullet()->getaabb()->getmaxes()[0], bazooka->getBullet()->getaabb()->getmaxes()[2], angle, bazooka->getBullet()->getlastymax()) &&
+	bazooka->moveBullet(xShooting, yShooting, angle, r, g, b);
+	if (timeShooting > 1.0f || bazooka->getBullet()->getDroping() && yShooting < mountain->getYPosition(bazooka->getBullet()->getaabb()->getmaxes()[0], bazooka->getBullet()->getaabb()->getmaxes()[2], angle, bazooka->getBullet()->getlastymax()) &&
 		yShooting > mountain->getYPosition(bazooka->getBullet()->getaabb()->getmins()[0], bazooka->getBullet()->getaabb()->getmins()[2], angle, bazooka->getBullet()->getlastymin())
 		|| yShooting < -0.4f) {
-		printf("%f %f\n", mountain->getYPosition(bazooka->getBullet()->getaabb()->getmaxes()[0], bazooka->getBullet()->getaabb()->getmaxes()[2], angle, bazooka->getBullet()->getlastymax()), mountain->getYPosition(bazooka->getBullet()->getaabb()->getmins()[0], bazooka->getBullet()->getaabb()->getmins()[2], angle, bazooka->getBullet()->getlastymin()));
+		//printf("%f %f\n", mountain->getYPosition(bazooka->getBullet()->getaabb()->getmaxes()[0], bazooka->getBullet()->getaabb()->getmaxes()[2], angle, bazooka->getBullet()->getlastymax()), mountain->getYPosition(bazooka->getBullet()->getaabb()->getmins()[0], bazooka->getBullet()->getaabb()->getmins()[2], angle, bazooka->getBullet()->getlastymin()));
 		shooting = false;
 		bazooka->endShooting();
 		flashTime = initialFlashTime;
 		bazooka->getBullet()->resetBullet(bazooka->getM());
-		printf("DZIALA\n");
+		//printf("DZIALA\n");
 	}
 }
 

@@ -45,7 +45,7 @@ public:
 	float getAngle();
 
 	void shootBullet(float strength);
-	void countShootingTrajectory(); // to do
+	void countShootingTrajectory(double r, double g, double b); // to do
 	Bazooka* getBazooka();
 	bool getShooting();
 	void loseLife();

@@ -73,8 +73,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		//if (key == GLFW_KEY_D) speed_x = PI;
 		if (key == GLFW_KEY_W) speed_y = PI / 2;
 		if (key == GLFW_KEY_S) speed_y = -PI / 2;
-		if (key == GLFW_KEY_UP) speed_up = PI / 2;
-		if (key == GLFW_KEY_DOWN) speed_up = -PI / 2;
+		if (key == GLFW_KEY_UP) speed_up = PI;
+		if (key == GLFW_KEY_DOWN) speed_up = -PI;
 		if (!shooting && key == GLFW_KEY_SPACE) strength = 0.4;
 	}
 	if (action == GLFW_RELEASE) {
@@ -225,7 +225,7 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 							//printf("bullet %d X min %f max %f, \t Z min %f max %f\n", j, snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmaxes()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
 							snails[i]->getBazooka()->getBullet()->setExplosion();
 							//printf("%d\n", snails[i]->getBazooka()->getBullet()->getExplosion());
-							printf("KOLIZJA Z %d\n", j);
+							//printf("KOLIZJA Z %d\n", j);
 							snails[i]->setShooting();	
 							shooting = false;//changeActiveSnail = true;
 							break;
@@ -239,7 +239,7 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 				if (snails[i]->getTimeShooting() > 2.0f  || !snails[i]->getShooting()) {
 					snails[i]->setShooting();
 					shooting = false;
-					printf("KONIEC\n");
+					//printf("KONIEC\n");
 					//changeActiveSnail = true;
 				}
 			}
@@ -248,7 +248,7 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 	
 	// narysuj pasek sily
 	if (strength) {
-		printf("TUTAJ\n");
+		//printf("TUTAJ\n");
 		bar->draw(strength);
 	}
 	else {
