@@ -19,6 +19,9 @@ Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, G
 	initialFlashTime = 5.0f;
 	flashTime = 0.0f;
 	lastY = 0.0f;
+
+	wind = 0.0f;
+
 }
 
 void Snail::setRandomCoords(int i) {
@@ -73,7 +76,7 @@ void Snail::moveSnail(float y)
 void Snail::rotateSnail(int x)
 {
 	//angleOfSnail += (float)x;
-	//printf("OBRÓT: %f\n", angleOfSnail);
+	//printf("OBRÃ“T: %f\n", angleOfSnail);
 	//if (angleOfSnail > 2 * PI)	angleOfSnail = 0.0f;
 	//else if (angleOfSnail < 0.0f)	angleOfSnail = 2 * PI;
 	//x = x / ( PI * 360.0);
@@ -120,6 +123,9 @@ void Snail::shootBullet(float strength) {
 	angleShooting = bazooka->getAngle() + 10.0f;
 	timeShooting = 0.0f;
 	speedShooting = log(strength) / log(2) * 6;
+
+	wind = randomFloat(0.0f, 3.0f) - 1.5f;
+
 	//printf("angle: %f ----- speed: %f ---- cosinus: %f, ----- sinus: %f\n", angleShooting, speedShooting, cos(angleShooting * PI / 180), sin(angleShooting * PI / 180));
 	bazooka->startShooting();
 	bazooka->getBullet()->resetBullet(bazooka->getM());
@@ -127,7 +133,8 @@ void Snail::shootBullet(float strength) {
 }
 
 void Snail::countShootingTrajectory(double r, double g, double b) {
-	xShooting = speedShooting * timeShooting * cos(angleShooting * PI / 180) * 1.0f;
+
+	xShooting = speedShooting * timeShooting * cos(angleShooting * PI / 180) * 1.0f + wind;
 	yShooting = speedShooting * timeShooting * sin(angleShooting * PI / 180) + 0.0f - 0.5f * 9.806f * pow(timeShooting, 2);
 	timeShooting += 0.003f;
 	//printf("--- %f, %f\n", xShooting, yShooting);

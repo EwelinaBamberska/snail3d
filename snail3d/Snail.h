@@ -94,8 +94,8 @@ private:
 	float flashTime;
 	float initialFlashTime;
 	bool stop = false;
-	
 
+	float wind;
 };
 
 #endif
