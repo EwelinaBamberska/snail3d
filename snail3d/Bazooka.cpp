@@ -28,7 +28,8 @@ void Bazooka::drawBazooka(float z, glm::mat4 snailM, int angl, double r, double 
 
 	if (!shooting) {
 		bullet->translateOfM(M);
-		bullet->drawBullet( 0.0f, 0.0f, angl, r, g, b);
+		if(!bullet->getExplosion())
+			bullet->drawBullet( 0.0f, 0.0f, angl, r, g, b);
 	}
 }
 
@@ -48,7 +49,8 @@ void Bazooka::moveBullet(float x, float y, int angle, double r, double g, double
 		bullet->drawExplosion();
 
 	}
-	bullet->drawBullet(x, y, angle, r, g, b);
+	else
+		bullet->drawBullet(x, y, angle, r, g, b);
 }
 
 float Bazooka::getAngle() {

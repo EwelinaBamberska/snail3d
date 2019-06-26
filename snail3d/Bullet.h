@@ -14,6 +14,7 @@
 #include "allmodels.h"
 #include "OBJloader.h"
 #include "DrawableElement.h"
+#include "ExplosionEffect.h"
 
 class Bullet : public DrawableElement
 {
@@ -38,6 +39,7 @@ private:
 	bool explosion;
 	float lastymax, lastymin;
 	bool droping;
+	ExplosionEffect* expl;
 };
 
 #endif

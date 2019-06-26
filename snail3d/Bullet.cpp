@@ -6,6 +6,8 @@ Bullet::Bullet(GLuint t, char* objFileName, ShaderProgram *sp) : DrawableElement
 	aabb->setmins(aabb->getmins()[0] * 0.5f, aabb->getmins()[1] * 0.5f, aabb->getmins()[2] * 0.5f);
 	aabb->move(-0.05f * 0.5f, 1.2f * 0.5f, 0.0f);
 	previousy = previousx = 0.0f;*/
+	char name[] = "models/explosion.obj";
+	expl = new ExplosionEffect(t, name, sp);
 	resetBullet(glm::mat4(1.0f));
 	explosion = false;
 
@@ -14,7 +16,7 @@ Bullet::Bullet(GLuint t, char* objFileName, ShaderProgram *sp) : DrawableElement
 }
 
 void Bullet::countScaling() {
-	scaling = sqrt(sqrt(1.0f + ((timeOfExplosion * 2.0f) / 7.0f)));//(5.0f - (5.0f - timeOfExplosion / 2));
+	scaling += sqrt(sqrt(1.0f + ((timeOfExplosion * 2.0f) / 100.0f)));//(5.0f - (5.0f - timeOfExplosion / 2));
 }
 
 void Bullet::resetBullet(glm::mat4 bazookaM) {
@@ -26,7 +28,7 @@ void Bullet::resetBullet(glm::mat4 bazookaM) {
 	M = bazookaM;
 	M = glm::translate(M, glm::vec3(-0.05f, 1.2f, 0.0f));
 	M = glm::scale(M, glm::vec3(0.5f, 0.5f, 0.5f));
-
+	expl->resetM(M);
 	scaling = 1.0f;
 	timeOfExplosion = 0.0f;	
 	explosion = false;
@@ -34,8 +36,9 @@ void Bullet::resetBullet(glm::mat4 bazookaM) {
 
 void Bullet::drawExplosion() {
 	countScaling();
-	M = glm::scale(M, glm::vec3(scaling, scaling, scaling));
-	//printf("SCALING %f\n", scaling);
+	expl->draw(M, scaling);
+	//M = glm::scale(M, glm::vec3(scaling, scaling, scaling));
+	////printf("SCALING %f\n", scaling);
 	timeOfExplosion += 0.01f;
 	if (timeOfExplosion > 5.0f) {
 		explosion = false;

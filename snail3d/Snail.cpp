@@ -101,7 +101,7 @@ void Snail::draw(float z, double r, double g, double b)
 	glm::mat4 M1 = glm::translate(M, glm::vec3(0.0f, lastY, 0.0f));
 	if (turn == true) {
 		initSolidDrawing(camera->getP(), camera->getV());
-		pointer->drawAboveSnail(M1);
+		pointer->drawAboveSnail(M1, r, g, b);
 	}
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M1));
 	

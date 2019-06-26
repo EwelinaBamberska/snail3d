@@ -22,7 +22,8 @@ class ExplosionEffect : public DrawableElement
 {
 public:
 	ExplosionEffect(GLuint tex, char* objFileName, ShaderProgram* s);
-	void draw(glm::mat4 bulletM);
+	void draw(glm::mat4 bulletM, float scale);
+	void resetM(glm::mat4 M);
 
 private:
 	ShaderProgram* sp;

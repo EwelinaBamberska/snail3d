@@ -4,10 +4,14 @@ ExplosionEffect::ExplosionEffect(GLuint tex, char* objFileName, ShaderProgram* s
 	sp = s;
 	M = glm::mat4(1.0f);
 }
-void ExplosionEffect::draw(glm::mat4 bulletM) {
-	printf("d");
-	M = glm::scale(bulletM, glm::vec3(10.0f, 10.0f, 10.0f));
-	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(bulletM));
+
+void ExplosionEffect::resetM(glm::mat4 bulletM) {
+	M = bulletM;
+}
+
+void ExplosionEffect::draw(glm::mat4 bulletM, float scale) {
+	M = glm::scale(bulletM, glm::vec3(scale, scale, scale));
+	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
 	drawTextured();
 
 }
