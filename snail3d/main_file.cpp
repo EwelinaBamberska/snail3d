@@ -75,7 +75,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		if (key == GLFW_KEY_S) speed_y = -PI / 2;
 		if (key == GLFW_KEY_UP) speed_up = PI / 2;
 		if (key == GLFW_KEY_DOWN) speed_up = -PI / 2;
-		if ( key == GLFW_KEY_SPACE) strength = 0.1;
+		if (!shooting && key == GLFW_KEY_SPACE) strength = 0.4;
 	}
 	if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_A) speed_x = 1;
@@ -84,7 +84,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		if (key == GLFW_KEY_S) speed_y = 0;
 		if (key == GLFW_KEY_UP) speed_up = 0;
 		if (key == GLFW_KEY_DOWN) speed_up = 0;
-		if ( key == GLFW_KEY_SPACE) {
+		if (!shooting && key == GLFW_KEY_SPACE) {
 			strength = 0;
 			strengthReleased = true;
 		}		
@@ -191,12 +191,17 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 	}
 
 	// narysuj slimaki
+	if (shooting){
+	speed_up = 0.0f;
+	speed_x = 0.0f;
+	speed_y = 0.0f;
+	}
 	for (int i = 0; i < snails.size(); i++) {
 		if (snails[i]->getIfLive()) {
 			if (snails[i]->getTurn() == true) {
 				snails[i]->rotateSnail(speed_x);
 				speed_x = 0;
-				
+
 				snails[i]->moveSnail(speed_y * 0.005);
 				//if (speed_y) {
 				//	//obliczanie y
@@ -206,11 +211,11 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 				//snails[i]->setYPos((translateY1 + translateY2) / 2);
 				float max = translateY1 > translateY2 ? translateY1 : translateY2;
 				snails[i]->getaabb()->sety(max);
-				snails[i]->getBazooka()->getBullet()->getaabb()->setyforBullet(snails[i]->getLasty() - max);			
+				snails[i]->getBazooka()->getBullet()->getaabb()->setyforBullet(snails[i]->getLasty() - max);
 				snails[i]->setLastY(max);
 
 				//}
-				if (snails[i]->getShooting()) {
+				if (snails[i]->getShooting() && !snails[i]->getBazooka()->getBullet()->getExplosion()) {
 					for (int j = 0; j < snails.size(); j++) {
 						//printf("%d X min %f max %f, \t Z min %f max %f\n",j, snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getaabb()->getmaxes()[2]);
 						//printf("SPRAWDZA\n");
@@ -218,12 +223,11 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 							snails[j]->loseLife();
 							//printf("%d X min %f max %f, \t Z min %f max %f\n", j, snails[j]->getaabb()->getmins()[0], snails[j]->getaabb()->getmaxes()[0], snails[j]->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
 							//printf("bullet %d X min %f max %f, \t Z min %f max %f\n", j, snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmaxes()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
-							//snails[i]->getBazooka()->getBullet()->setExplosion();
-							printf("%d\n", snails[i]->getBazooka()->getBullet()->getExplosion());
+							snails[i]->getBazooka()->getBullet()->setExplosion();
+							//printf("%d\n", snails[i]->getBazooka()->getBullet()->getExplosion());
 							printf("KOLIZJA Z %d\n", j);
-							snails[i]->setShooting();
-							shooting = false;
-							//changeActiveSnail = true;
+							snails[i]->setShooting();	
+							shooting = false;//changeActiveSnail = true;
 							break;
 						}
 					}
@@ -232,17 +236,19 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 			}
 			snails[i]->draw(speed_up, rgb.r, rgb.g, rgb.b);
 			if (shooting) {
-				if (snails[i]->getTimeShooting() > 10.0f) {
+				if (snails[i]->getTimeShooting() > 2.0f  || !snails[i]->getShooting()) {
 					snails[i]->setShooting();
-					//changeActiveSnail = true;
 					shooting = false;
+					printf("KONIEC\n");
+					//changeActiveSnail = true;
 				}
 			}
 		}
 	}
-
+	
 	// narysuj pasek sily
 	if (strength) {
+		printf("TUTAJ\n");
 		bar->draw(strength);
 	}
 	else {
@@ -318,7 +324,8 @@ int main(void)
 
 	snails[0]->setTurn(true);
 	//Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);//, spLambert);
-	StrengthBar* strenghBar = new StrengthBar(camera, sp);
+	char barName[] = "models/strengthbar.obj";
+	StrengthBar* strenghBar = new StrengthBar(redTex, barName, sp);
 
 	while (!glfwWindowShouldClose(window)) //Tak d�ugo jak okno nie powinno zosta� zamkni�te
 	{

@@ -16,14 +16,14 @@
 #include "OBJloader.h"
 #include "AABBObject.h"
 #include "allmodels.h"
-
+#include "DrawableElement.h"
 //#include "myCube.h"
 
 
-class StrengthBar
+class StrengthBar : public DrawableElement
 {
 public:
-	StrengthBar(Camera* c, ShaderProgram* sp);
+	StrengthBar(GLuint t, char*fileName, ShaderProgram* sp);
 	virtual ~StrengthBar();
 	void loadCube();
 	void drawSolid();
@@ -38,8 +38,6 @@ private:
 	glm::mat4 M;
 	float length;
 	float maxLength;
-	Camera *camera;
-	ShaderProgram* sp;
 };
 
 #endif // STRENGTHBAR_H

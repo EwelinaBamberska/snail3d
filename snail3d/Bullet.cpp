@@ -8,10 +8,13 @@ Bullet::Bullet(GLuint t, char* objFileName, ShaderProgram *sp) : DrawableElement
 	previousy = previousx = 0.0f;*/
 	resetBullet(glm::mat4(1.0f));
 	explosion = false;
+
+	scaling = 2.0f;
+	timeOfExplosion = 0.0f;
 }
 
 void Bullet::countScaling() {
-	scaling = timeOfExplosion * 2.0f;//(5.0f - (5.0f - timeOfExplosion / 2));
+	scaling = sqrt(1.0f + ((timeOfExplosion * 2.0f) / 7.0f));//(5.0f - (5.0f - timeOfExplosion / 2));
 }
 
 void Bullet::resetBullet(glm::mat4 bazookaM) {
@@ -30,9 +33,10 @@ void Bullet::resetBullet(glm::mat4 bazookaM) {
 }
 
 void Bullet::drawExplosion() {
+	countScaling();
 	M = glm::scale(M, glm::vec3(scaling, scaling, scaling));
-	printf("EKSPLOZJA\n");
-	timeOfExplosion += 0.1f;
+	printf("SCALING %f\n", scaling);
+	timeOfExplosion += 0.01f;
 	if (timeOfExplosion > 5.0f) {
 		explosion = false;
 	}
@@ -43,9 +47,7 @@ void Bullet::drawExplosion() {
 void Bullet::translateOfM(glm::mat4 snailM) {
 	M = snailM;
 	M = glm::translate(M, glm::vec3(-0.05f, 1.2f, 0.0f));
-
 	M = glm::scale(M, glm::vec3(0.5f, 0.5f, 0.5f));
-
 }
 
 void Bullet::drawBullet(float x, float y, int angle) {
@@ -83,6 +85,7 @@ void Bullet::drawBullet(float x, float y, int angle) {
 }
 
 void Bullet::setExplosion() {
+	scaling = 1.0f;
 	explosion = true;
 }
 

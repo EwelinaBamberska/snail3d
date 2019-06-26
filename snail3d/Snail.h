@@ -20,6 +20,7 @@
 #include "Mountain.h"
 #include "DrawableElement.h"
 #include "Utils.h"
+#include "Mountain.h"
 
 #include <iostream>
 #include <ctime>
@@ -84,6 +85,7 @@ private:
 	HealthBar* actualLife;
 	bool ifLive = true;
 	float lastY;
+	Mountain* mountain;
 
 
 

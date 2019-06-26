@@ -105,7 +105,7 @@ void Snail::draw(float z, double r, double g, double b)
 	bazooka->drawBazooka(z, M1, angle);
 	healthBar->drawHealthBar(M1, 2.0f);
 	actualLife->drawHealthBar(M1, 2.2f);
-	if (shooting == true) {
+	if (shooting == true || bazooka->getBullet()->getExplosion()) {
 		countShootingTrajectory();
 	}
 
@@ -118,7 +118,7 @@ void Snail::shootBullet(float strength) {
 	xShooting = 0.0f;
 	angleShooting = bazooka->getAngle() + 10.0f;
 	timeShooting = 0.0f;
-	speedShooting = log(strength) / log(2) * 4;
+	speedShooting = log(strength) / log(2) * 6;
 	printf("angle: %f ----- speed: %f ---- cosinus: %f, ----- sinus: %f\n", angleShooting, speedShooting, cos(angleShooting * PI / 180), sin(angleShooting * PI / 180));
 	bazooka->startShooting();
 	bazooka->getBullet()->resetBullet(bazooka->getM());
@@ -128,7 +128,7 @@ void Snail::shootBullet(float strength) {
 void Snail::countShootingTrajectory() {
 	xShooting = speedShooting * timeShooting * cos(angleShooting * PI / 180) * 1.0f;
 	yShooting = speedShooting * timeShooting * sin(angleShooting * PI / 180) + 0.0f - 0.5f * 9.806f * pow(timeShooting, 2);
-	timeShooting += 0.001f;
+	timeShooting += 0.004f;
 	//printf("--- %f, %f\n", xShooting, yShooting);
 	bazooka->moveBullet(xShooting, yShooting, angle);
 
@@ -136,6 +136,7 @@ void Snail::countShootingTrajectory() {
 		shooting = false;
 		bazooka->endShooting();
 		flashTime = initialFlashTime;
+		bazooka->getBullet()->resetBullet(bazooka->getM());
 		printf("DZIALA\n");
 	}
 }
