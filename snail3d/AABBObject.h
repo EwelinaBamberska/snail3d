@@ -29,6 +29,7 @@ public:
 	float* getmaxes();
 	float* getmins();
 	bool check_if_collision(AABBObject* object);
+
 	void move(float x, float y, float z);
 	void moveOn(float x, float y, float z);
 	void setprevious();

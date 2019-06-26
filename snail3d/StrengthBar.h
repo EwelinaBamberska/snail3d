@@ -23,10 +23,9 @@
 class StrengthBar : public DrawableElement
 {
 public:
-	StrengthBar(GLuint t, char*fileName, ShaderProgram* sp);
+	StrengthBar(Camera* c, ShaderProgram* sp, GLuint tex, char* objFileName);
 	virtual ~StrengthBar();
 	void loadCube();
-	void drawSolid();
 	void draw(float s);
 	void setLength(float l);
 	float getLength();
@@ -35,9 +34,11 @@ public:
 protected:
 
 private:
-	glm::mat4 M;
+	//glm::mat4 M;
 	float length;
 	float maxLength;
+	Camera *camera;
+	//ShaderProgram* sp;
 };
 
 #endif // STRENGTHBAR_H

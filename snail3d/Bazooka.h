@@ -14,6 +14,7 @@
 #include "allmodels.h"
 #include "Bullet.h"
 #include "OBJloader.h"
+#include "ExplosionEffect.h"
 
 
 class Bazooka : public DrawableElement
@@ -21,20 +22,21 @@ class Bazooka : public DrawableElement
 public:
 	Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName, ShaderProgram *sp);
 	void drawBazooka(float z, glm::mat4 M, int angle, double r, double g, double b);
-	float getAngle();
 	void moveBullet(float x, float y, int angle, double r, double g, double b);
-	void startShooting();
-	Bullet* getBullet();
 	glm::mat4 getM();
 	void translateBazooka(float x, float y);
 	void endShooting();
+	float getAngle();
+	void startShooting();
+	void endShooting();
+	Bullet* getBullet();
+	//void drawExplosion();
 
 private:
 	float angle;
 	Bullet* bullet;
 	bool shooting;
 	glm::mat4 shootedM;
-	glm::mat4 M1;
 };
 
 #endif

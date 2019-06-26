@@ -36,6 +36,7 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "AABBObject.h"
 #include "StrengthBar.h"
 #include "Mountain.h"
+#include "RGBflashLight.h"
 #include <vector>
 
 int speed_x = 0;
@@ -137,8 +138,8 @@ void initOpenGLProgram(GLFWwindow* window) {
 	bulletTex = readTexture("models/bullet_tex.png");
 	blueTex = readTexture("models/blue_texture.png");
 	redTex = readTexture("models/red_texture.png");
-	sp = new ShaderProgram("vertex.glsl", NULL, "fragment.glsl");
 
+	sp = new ShaderProgram("vertex.glsl", NULL, "fragment.glsl");
 }
 
 //Release resources allocated by the program
@@ -153,8 +154,6 @@ void freeOpenGLProgram(GLFWwindow* window) {
 	glDeleteTextures(1, &redTex);
 	delete sp;
 
-}
-
 int getActiveSnailIndex(std::vector<Snail*> snails) {
 	for (int i = 0; i < snails.size(); i++) {
 		if (snails[i]->getTurn() == true) {
@@ -163,15 +162,20 @@ int getActiveSnailIndex(std::vector<Snail*> snails) {
 	}
 }
 
+
 //Procedura rysuj�ca zawarto�� sceny
 void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::vector<Snail*> snails) { //  Snail* snail) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//bool explosion = false;
 	RGBflashLight rgb;
 
+	// sprawdz czy wystapil wybuch
 	for (int i = 0; i < snails.size(); i++) {
 		rgb = snails[i]->getRGB();
+
 		if (rgb.r > 0) {
+			//explosion = true;
 			break;
 		}
 	}
@@ -279,7 +283,7 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	window = glfwCreateWindow(500, 500, "OpenGL", NULL, NULL);  //Utw�rz okno 500x500 o tytule "OpenGL" i kontekst OpenGL.
+	window = glfwCreateWindow(800, 800, "OpenGL", NULL, NULL);  //Utw�rz okno 500x500 o tytule "OpenGL" i kontekst OpenGL.
 
 	if (!window) //Je�eli okna nie uda�o si� utworzy�, to zamknij program
 	{
@@ -299,13 +303,14 @@ int main(void)
 	initOpenGLProgram(window); //Operacje inicjuj�ce
 
 	//G��wna p�tla
+	float angle_x = 0; //Aktualny k�t obrotu obiektu
+	float angle_y = 0; //Aktualny k�t obrotu obiektu
 	glfwSetTime(0); //Zeruj timer
-
+	
 	Camera* camera = new Camera();
-
-
-	char mountainName[] = "models/mountain.obj";
+	char mountainName[] = "models/ground.obj";
 	char snailName[] = "models/snail.obj";
+	char barName[] = "models/strengthbar.obj";
 
 	int i = 0;
 	std::vector<Snail*> snails;
@@ -328,7 +333,7 @@ int main(void)
 
 	snails[0]->setTurn(true);
 	//Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);//, spLambert);
-	char barName[] = "models/strengthbar.obj";
+	
 	StrengthBar* strenghBar = new StrengthBar(redTex, barName, sp);
 
 	while (!glfwWindowShouldClose(window)) //Tak d�ugo jak okno nie powinno zosta� zamkni�te

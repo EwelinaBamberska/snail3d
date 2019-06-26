@@ -133,7 +133,7 @@ ShaderProgram::~ShaderProgram() {
 
 //W³¹cz u¿ywanie programu cieniuj¹cego reprezentowanego przez aktualny obiekt
 void ShaderProgram::use() {
-   	glUseProgram(shaderProgram);
+	glUseProgram(shaderProgram);
 }
 
 //Pobierz numer slotu odpowiadaj¹cego zmiennej jednorodnej o nazwie variableName

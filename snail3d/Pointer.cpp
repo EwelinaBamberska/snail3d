@@ -2,13 +2,12 @@
 
 Pointer::Pointer(char * objFileName, GLuint tex, ShaderProgram* sp) : DrawableElement(tex, objFileName, sp) {}
 
-void Pointer::drawAboveSnail(glm::mat4 snailM) {
+void Pointer::drawAboveSnail(glm::mat4 snailM, double r, double g, double b) {
 
 	M = glm::translate(snailM, glm::vec3(0.0f, 1.0f, 0.0f));
 	M = glm::scale(M, glm::vec3(0.3f, 0.3f, 0.3f));
 
-	//glUniform4f(sp->u("color"), 0.2, 0.7, 1, 1);
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
 
-	drawTextured();
+	drawTextured(r, g, b);
 }

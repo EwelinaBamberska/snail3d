@@ -9,7 +9,7 @@ bool AABBObject::check_if_collision(AABBObject* object) {
 	//printf("Snail: x  %f y %f z %f\n", object->getmins()[0], object->getmins()[1], object->getmins()[2]);
 	//printf("BULLET: x %f y %f z %f\n", mins[0], mins[1], mins[2]);
 	/*if (mins[0] <= object->getmaxes()[0] && maxes[0] >= object->getmins()[0]) printf("X sie mieszcza\n");
-	if (mins[1] <= object->getmaxes()[1] && maxes[1] >= object->getmins()[1]) printf("Y teŸ\n");
+	if (mins[1] <= object->getmaxes()[1] && maxes[1] >= object->getmins()[1]) printf("Y teï¿½\n");
 	if (mins[2] <= object->getmaxes()[2] && maxes[2] >= object->getmins()[2]) printf("Z\n");*/
 	if (mins[0] <= object->getmaxes()[0] && maxes[0] >= object->getmins()[0] &&
 		mins[1] <= object->getmaxes()[1] && maxes[1] >= object->getmins()[1] &&

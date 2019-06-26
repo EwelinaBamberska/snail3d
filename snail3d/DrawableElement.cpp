@@ -1,9 +1,9 @@
-﻿#include "DrawableElement.h"
+#include "DrawableElement.h"
 
 DrawableElement::DrawableElement(GLuint t, char *objFileName, ShaderProgram *s) {
 	M = glm::mat4(1.0f);
+	
 	aabb = new AABBObject();
-
 	modelObj = new OBJloader();
 	modelObj->loadOBJ(objFileName);
 	tex = t;
@@ -45,41 +45,7 @@ void DrawableElement::initSolidDrawing(glm::mat4 P, glm::mat4 V) {
 	glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
 }
 
-void DrawableElement::drawCommon() {
-	glUniform4f(sp->u("lp"), 0, 10, -6, 0.8); //Wsp�rz�dne �r�d�a �wiat�a
-	glUniform4f(sp->u("lp2"), 0, 0, 1, 1);
-	glUniform1i(sp->u("textureMap0"), 0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex);
-
-	/*glUniform1i(sp->u("textureMap1"), 1);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, tex);*/
-
-
-	glEnableVertexAttribArray(sp->a("vertex"));  //W��cz przesy�anie danych do atrybutu vertex
-	glVertexAttribPointer(sp->a("vertex"), 4, GL_FLOAT, false, 0, modelObj->get_vertices()); //Wska� tablic� z danymi dla atrybutu vertex
-
-	glEnableVertexAttribArray(sp->a("normal"));  //W��cz przesy�anie danych do atrybutu normal
-	glVertexAttribPointer(sp->a("normal"), 4, GL_FLOAT, false, 0, modelObj->get_normals()); //Wska� tablic� z danymi dla atrybutu normal
-
-	glEnableVertexAttribArray(sp->a("texCoord0"));  //W��cz przesy�anie danych do atrybutu texCoord0
-	glVertexAttribPointer(sp->a("texCoord0"), 2, GL_FLOAT, false, 0, modelObj->get_texCoords()); //Wska� tablic� z danymi dla atrybutu texCoord0
-
-	glDrawArrays(GL_TRIANGLES, 0, modelObj->getVNumber()); //Narysuj obiekt
-
-	glDisableVertexAttribArray(sp->a("vertex"));  //Wy��cz przesy�anie danych do atrybutu vertex
-	glDisableVertexAttribArray(sp->a("normal"));  //Wy��cz przesy�anie danych do atrybutu normal
-	glDisableVertexAttribArray(sp->a("texCoord0"));  //Wy��cz przesy�anie danych do atrybutu texCoord0
-
-}
-
-void DrawableElement::drawTextured(double r, double g, double b) {
-	glUniform4f(sp->u("color"), r, g, b, 1);
-	drawCommon();
-}
-
-void DrawableElement::drawTextured() {
+void DrawableElement::drawTextured(double rColor, double gColor, double bColor) {
 	/*
 	glEnableVertexAttribArray(sp->a("vertex"));
 	glVertexAttribPointer(sp->a("vertex"), 4, GL_FLOAT, false, 0, modelObj->get_vertices());
@@ -99,8 +65,42 @@ void DrawableElement::drawTextured() {
 	//sp->use();//Aktywacja programu cieniuj�cego
 	//Przeslij parametry programu cieniuj�cego do karty graficznej
 	//glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
+	
+
+	//glUniform4f(sp->u("color"), 1, 0.8, 0, 1); // kolor �wiat�a od rozb�ysku
+
+	glUniform4f(sp->u("color"), rColor, gColor, bColor, 1);
+	drawCommon();
+
+}
+
+void DrawableElement::drawTextured() {
 	glUniform4f(sp->u("color"), 0, 0, 0, 1);
 	drawCommon();
+}
+
+void DrawableElement::drawCommon() {
+
+	glUniform4f(sp->u("lp"), 0, 10, -6, 0.8); //Wsp�rz�dne �r�d�a �wiat�a zwyk�ego
+	glUniform4f(sp->u("lp2"), 0, 0, 1, 1); //Wsp�rz�dne �r�d�a �wiat�a rozb�ysku
+	glUniform1i(sp->u("textureMap0"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tex);
+
+	glEnableVertexAttribArray(sp->a("vertex"));  //W��cz przesy�anie danych do atrybutu vertex
+	glVertexAttribPointer(sp->a("vertex"), 4, GL_FLOAT, false, 0, modelObj->get_vertices()); //Wska� tablic� z danymi dla atrybutu vertex
+
+	glEnableVertexAttribArray(sp->a("normal"));  //W��cz przesy�anie danych do atrybutu normal
+	glVertexAttribPointer(sp->a("normal"), 4, GL_FLOAT, false, 0, modelObj->get_normals()); //Wska� tablic� z danymi dla atrybutu normal
+
+	glEnableVertexAttribArray(sp->a("texCoord0"));  //W��cz przesy�anie danych do atrybutu texCoord0
+	glVertexAttribPointer(sp->a("texCoord0"), 2, GL_FLOAT, false, 0, modelObj->get_texCoords()); //Wska� tablic� z danymi dla atrybutu texCoord0
+
+	glDrawArrays(GL_TRIANGLES, 0, modelObj->getVNumber()); //Narysuj obiekt
+
+	glDisableVertexAttribArray(sp->a("vertex"));  //Wy��cz przesy�anie danych do atrybutu vertex
+	glDisableVertexAttribArray(sp->a("normal"));  //Wy��cz przesy�anie danych do atrybutu normal
+	glDisableVertexAttribArray(sp->a("texCoord0"));  //Wy��cz przesy�anie danych do atrybutu texCoord0
 }
 
 
