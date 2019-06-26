@@ -46,6 +46,11 @@ void AABBObject::setx(float minx, float maxx) {
 	mins[0] += minx;
 }
 
+void AABBObject::setyforBullet(float y) {
+	maxes[1] += y;
+	mins[1] += y;
+}
+
 void AABBObject::sety(float y1) {
 	maxes[1] = maxy + y1;
 	mins[1] = miny + y1;

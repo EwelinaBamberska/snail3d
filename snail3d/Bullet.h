@@ -23,9 +23,16 @@ public:
 	//void drawShootedBullet(glm::mat4 bazookaM, float x, float y);
 	void resetBullet(glm::mat4 M);
 	void translateOfM(glm::mat4 snailM);
+	void drawExplosion();
+	void setExplosion();
+	bool getExplosion();
 
 private:
 	float previousx, previousy;
+	float scaling;
+	float timeOfExplosion;
+	void countScaling();
+	bool explosion;
 };
 
 #endif

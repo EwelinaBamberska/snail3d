@@ -34,6 +34,7 @@ public:
 	void setprevious();
 	bool getChanged();
 	void setChanged(bool b);
+	void setyforBullet(float y);
 protected:
 
 private:

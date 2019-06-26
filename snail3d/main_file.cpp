@@ -196,6 +196,7 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 			if (snails[i]->getTurn() == true) {
 				snails[i]->rotateSnail(speed_x);
 				speed_x = 0;
+				
 				snails[i]->moveSnail(speed_y * 0.005);
 				//if (speed_y) {
 				//	//obliczanie y
@@ -204,9 +205,10 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 				//printf("%f %f\n", translateY1, translateY2);
 				//snails[i]->setYPos((translateY1 + translateY2) / 2);
 				float max = translateY1 > translateY2 ? translateY1 : translateY2;
-				snails[i]->setLastY(max);
 				snails[i]->getaabb()->sety(max);
-				snails[i]->getBazooka()->getBullet()->getaabb()->sety(max);
+				snails[i]->getBazooka()->getBullet()->getaabb()->setyforBullet(snails[i]->getLasty() - max);			
+				snails[i]->setLastY(max);
+
 				//}
 				if (snails[i]->getShooting()) {
 					for (int j = 0; j < snails.size(); j++) {
@@ -216,7 +218,8 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 							snails[j]->loseLife();
 							//printf("%d X min %f max %f, \t Z min %f max %f\n", j, snails[j]->getaabb()->getmins()[0], snails[j]->getaabb()->getmaxes()[0], snails[j]->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
 							//printf("bullet %d X min %f max %f, \t Z min %f max %f\n", j, snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmaxes()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
-
+							//snails[i]->getBazooka()->getBullet()->setExplosion();
+							printf("%d\n", snails[i]->getBazooka()->getBullet()->getExplosion());
 							printf("KOLIZJA Z %d\n", j);
 							snails[i]->setShooting();
 							shooting = false;
