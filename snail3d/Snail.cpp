@@ -2,9 +2,10 @@
 
 
 
-Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool tur, ShaderProgram *sp, GLuint blueTex, GLuint redTex) : DrawableElement(snailTex, objFileName, sp)
+Snail::Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool tur, ShaderProgram *sp, GLuint blueTex, GLuint redTex, Mountain* m) : DrawableElement(snailTex, objFileName, sp)
 {
 	camera = c;
+	mountain = m;
 
 	char pointerName[] = "models/pointer.obj";
 	pointer = new Pointer(pointerName, blueTex, sp);
@@ -131,8 +132,10 @@ void Snail::countShootingTrajectory() {
 	timeShooting += 0.004f;
 	//printf("--- %f, %f\n", xShooting, yShooting);
 	bazooka->moveBullet(xShooting, yShooting, angle);
-
-	if (yShooting < 0.0f) {
+	if (bazooka->getBullet()->getDroping() && yShooting < mountain->getYPosition(bazooka->getBullet()->getaabb()->getmaxes()[0], bazooka->getBullet()->getaabb()->getmaxes()[2], angle, bazooka->getBullet()->getlastymax()) &&
+		yShooting > mountain->getYPosition(bazooka->getBullet()->getaabb()->getmins()[0], bazooka->getBullet()->getaabb()->getmins()[2], angle, bazooka->getBullet()->getlastymin())
+		|| yShooting < -0.4f) {
+		printf("%f %f\n", mountain->getYPosition(bazooka->getBullet()->getaabb()->getmaxes()[0], bazooka->getBullet()->getaabb()->getmaxes()[2], angle, bazooka->getBullet()->getlastymax()), mountain->getYPosition(bazooka->getBullet()->getaabb()->getmins()[0], bazooka->getBullet()->getaabb()->getmins()[2], angle, bazooka->getBullet()->getlastymin()));
 		shooting = false;
 		bazooka->endShooting();
 		flashTime = initialFlashTime;

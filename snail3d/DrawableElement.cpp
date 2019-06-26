@@ -79,29 +79,29 @@ void DrawableElement::drawTextured(double r, double g, double b) {
 	drawCommon();
 }
 
-void DrawableElement::drawTextured() {
-	/*
-	glEnableVertexAttribArray(sp->a("vertex"));
-	glVertexAttribPointer(sp->a("vertex"), 4, GL_FLOAT, false, 0, modelObj->get_vertices());
-
-	glEnableVertexAttribArray(sp->a("texCoord"));
-	glVertexAttribPointer(sp->a("texCoord"), 2, GL_FLOAT, false, 0, modelObj->get_texCoords());
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex);
-	glUniform1i(sp->u("tex"), 0);
-
-	glDrawArrays(GL_TRIANGLES, 0, modelObj->getVNumber());
-
-	glDisableVertexAttribArray(sp->a("vertex"));
-	glDisableVertexAttribArray(sp->a("texCoord"));*/
-
-	//sp->use();//Aktywacja programu cieniuj�cego
-	//Przeslij parametry programu cieniuj�cego do karty graficznej
-	//glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
-	glUniform4f(sp->u("color"), 0, 0, 0, 1);
-	drawCommon();
-}
+//void DrawableElement::drawTextured() {
+//	/*
+//	glEnableVertexAttribArray(sp->a("vertex"));
+//	glVertexAttribPointer(sp->a("vertex"), 4, GL_FLOAT, false, 0, modelObj->get_vertices());
+//
+//	glEnableVertexAttribArray(sp->a("texCoord"));
+//	glVertexAttribPointer(sp->a("texCoord"), 2, GL_FLOAT, false, 0, modelObj->get_texCoords());
+//
+//	glActiveTexture(GL_TEXTURE0);
+//	glBindTexture(GL_TEXTURE_2D, tex);
+//	glUniform1i(sp->u("tex"), 0);
+//
+//	glDrawArrays(GL_TRIANGLES, 0, modelObj->getVNumber());
+//
+//	glDisableVertexAttribArray(sp->a("vertex"));
+//	glDisableVertexAttribArray(sp->a("texCoord"));*/
+//
+//	//sp->use();//Aktywacja programu cieniuj�cego
+//	//Przeslij parametry programu cieniuj�cego do karty graficznej
+//	//glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
+//	glUniform4f(sp->u("color"), 0, 0, 0, 1);
+//	drawCommon();
+//}
 
 
 void DrawableElement::setBoxes()

@@ -310,7 +310,7 @@ int main(void)
 	Mountain* mountain = new Mountain(mountainTex, mountainName, sp);
 
 	for (i = 0; i < numberOfSnails; i++) {
-		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false, sp, blueTex, redTex));
+		snails.push_back(new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, false, sp, blueTex, redTex, mountain));
 		snails[snails.size() - 1]->setBoxes();
 
 		snails[snails.size() - 1]->setRandomCoords(i);

@@ -61,6 +61,8 @@ void Bullet::drawBullet(float x, float y, int angle) {
 		aabb->setprevious();
 		aabb->setChanged(false);
 	}*/
+	if ((y - previousy) * 0.5f * 0.2f < 0.0f) droping = true;
+	else droping = false;
 	if(angle == 0)
 		aabb->moveOn(0.0f, (y - previousy) * 0.5f * 0.2f, (x - previousx) * 0.5f * 0.2f);
 	else if (angle == 1){
@@ -72,12 +74,11 @@ void Bullet::drawBullet(float x, float y, int angle) {
 	else {
 		aabb->moveOn((x - previousx) * 0.5f * 0.2f, (y - previousy) * 0.5f * 0.2f, 0.0f);
 	}
+	lastymax = aabb->getmaxes()[1];
+	lastymin = aabb->getmins()[1];
 	//printf("Previous %f x %f Roznica %f\n", previousx, x, x - previousx);
 	previousx = x;
 	previousy = y;
-	//if (y != 0.0f || x != 0.0f)
-		//aabb->setChanged(true);
-	//printf("%f\n", y);
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
 
 	drawTextured();
@@ -91,4 +92,16 @@ void Bullet::setExplosion() {
 
 bool Bullet::getExplosion() {
 	return explosion;
+}
+
+float Bullet::getlastymax() {
+	return lastymax;
+}
+
+float Bullet::getlastymin() {
+	return lastymin;
+}
+
+bool Bullet::getDroping() {
+	return droping;
 }

@@ -26,6 +26,9 @@ public:
 	void drawExplosion();
 	void setExplosion();
 	bool getExplosion();
+	float getlastymax();
+	float getlastymin();
+	bool getDroping();
 
 private:
 	float previousx, previousy;
@@ -33,6 +36,8 @@ private:
 	float timeOfExplosion;
 	void countScaling();
 	bool explosion;
+	float lastymax, lastymin;
+	bool droping;
 };
 
 #endif
