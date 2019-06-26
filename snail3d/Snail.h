@@ -1,4 +1,4 @@
-#ifndef SNAIL_H
+﻿#ifndef SNAIL_H
 #define SNAIL_H
 
 #include <stdlib.h>
@@ -16,37 +16,86 @@
 #include "OBJloader.h"
 #include "allmodels.h"
 #include "AABBObject.h"
-#include "math.h"
 #include "Bazooka.h"
+#include "Mountain.h"
+#include "DrawableElement.h"
+#include "Utils.h"
+#include "Mountain.h"
 
-class Snail
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include <cstdio>
+#include "Pointer.h"
+#include "HealthBar.h"
+#include "RGBflashLight.h"
+
+class Snail : public DrawableElement
 {
 public:
-	Snail(Camera* c, GLuint t);// ShaderProgram* s);
+	Snail(Camera* c, char* objFileName, GLuint snailTex, GLuint bazookaTex, GLuint bulletTex, bool turn, ShaderProgram* sp, GLuint blueTex, GLuint redTex, Mountain* m);
 	virtual ~Snail();
-	void moveSnail(float angle_x);
-	void draw();
-	void rotateSnail(float z);
-	void setBoxes();
-	void drawBazooka(float z);
-	AABBObject* getaabb();
-	glm::mat4 getM();
-	Bazooka* getBazooka();
+	void moveSnail(float x);
+	void draw(float z, double r, double g, double b);
+	void rotateSnail(int angle);
+	bool getTurn();
+	void setTurn(bool t);
+	void setRandomCoords(int i);
+	void setYPos(float newy);
+	float getAngle();
 
+	void shootBullet(float strength);
+	void countShootingTrajectory(double r, double g, double b); // to do
+	Bazooka* getBazooka();
+	bool getShooting();
+	void loseLife();
+	bool getIfLive();
+	void setShooting();
+	float getTimeShooting();
+	RGBflashLight getRGB(); // pobiera kolory rozb�ysku
+	void setLastY(float y);
+	float getLasty();
+	bool getStop();
+	void setStop();
 
 protected:
 
 private:
-	OBJloader* snailObj;
-	float angleOfBazooka = 0;
-	glm::mat4 M;
-	glm::mat4 bazookaM;
-	Camera* camera;
-	void drawSolid();
-	AABBObject* aabb;
-	float angleOfSnail = 0;
-	GLuint tex;
 	Bazooka* bazooka;
+	Camera* camera;
+	bool turn;
+	float angleOfSnail = 0.0f;
+	float xpos = 0.0f, zpos = 0.0f;
+	float ypos;
+	float xcoord, ycoord;
+	glm::mat4 tmpM;
+
+	Pointer* pointer;
+	float HP;
+
+	void decreaseFlashTime();
+
+	// shooting variables
+	bool shooting;
+	float yShooting;
+	float xShooting;
+	float angleShooting;
+	float timeShooting;
+	float speedShooting;
+	int angle = 0;
+	HealthBar* healthBar;
+	HealthBar* actualLife;
+	bool ifLive = true;
+	float lastY;
+	Mountain* mountain;
+
+
+
+	float flashTime;
+	float initialFlashTime;
+	bool stop = false;
+	
+
 };
 
-#endif // SNAIL_H
+#endif

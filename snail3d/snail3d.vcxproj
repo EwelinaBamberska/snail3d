@@ -123,21 +123,28 @@
   <ItemGroup>
     <ClCompile Include="AABBObject.cpp" />
     <ClCompile Include="Bazooka.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="cube.cpp" />
-    <ClCompile Include="Landscape.cpp" />
+    <ClCompile Include="DrawableElement.cpp" />
+    <ClCompile Include="ExplosionEffect.cpp" />
+    <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main_file.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="Mountain.cpp" />
     <ClCompile Include="OBJloader.cpp" />
+    <ClCompile Include="Pointer.cpp" />
+    <ClCompile Include="RGBflashLight.cpp" />
     <ClCompile Include="shaderprogram.cpp" />
     <ClCompile Include="Snail.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="StrengthBar.cpp" />
-    <ClCompile Include="teapot.cpp" />
     <ClCompile Include="torus.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\nw\snail3d\snail3d.sln" />
+    <None Include="..\..\..\nw\snail3d\snail_nowy.vcxproj.user" />
     <None Include="fragment.glsl" />
     <None Include="f_colored.glsl" />
     <None Include="f_constant.glsl" />
@@ -154,22 +161,37 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABBObject.h" />
+    <ClInclude Include="allmodels.h" />
     <ClInclude Include="Bazooka.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="cube.h" />
-    <ClInclude Include="Landscape.h" />
+    <ClInclude Include="DrawableElement.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="ExplosionEffect.h" />
+    <ClInclude Include="HealthBar.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="Mountain.h" />
     <ClInclude Include="myCube.h" />
     <ClInclude Include="myTeapot.h" />
     <ClInclude Include="OBJloader.h" />
-    <ClInclude Include="shaderprogram.h" />
+    <ClInclude Include="Pointer.h" />
+    <ClInclude Include="RGBflashLight.h" />
     <ClInclude Include="Snail.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="StrengthBar.h" />
     <ClInclude Include="teapot.h" />
     <ClInclude Include="torus.h" />
+    <ClInclude Include="Utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\nw\snail3d\bricks.png" />
+    <Image Include="..\..\..\nw\snail3d\stone-wall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\nw\snail3d\gpl.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

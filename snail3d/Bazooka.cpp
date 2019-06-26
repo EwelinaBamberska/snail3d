@@ -1,34 +1,70 @@
 #include "Bazooka.h"
 
+Bazooka::Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName, ShaderProgram * sp) : DrawableElement(bazookaT, objFileName, sp) {
+	angle = 0.0f;
 
-
-Bazooka::Bazooka(Camera* c)
-{
-	bazookaM = glm::mat4(1.0f);
-	camera = c;
+	char name[] = "models/bullet.obj";
+	bullet = new Bullet(bulletT, name, sp);
+	bullet->resetBullet(M);
+	//bullet->setBoxes();
+	shooting = false;
 }
 
-void Bazooka::drawBazooka(float z, glm::mat4 M) {
-	angleOfBazooka += z;
-	if (angleOfBazooka > 80.0) angleOfBazooka = 80.0;
-	if (angleOfBazooka < -20.0) angleOfBazooka = -20.0;
-	float angle1 = angleOfBazooka * 2 * PI / 360;
+void Bazooka::drawBazooka(float z, glm::mat4 snailM, int angl, double r, double g, double b) {
+	// set position
+	angle += z;
+	if (angle > 80.0) angle = 80.0;
+	if (angle < 0.0) angle = 0.0;
+	float angle_conversed = angle * 2 * PI / 360;
 
-	spLambert->use();
-	glUniform4f(spLambert->u("color"), 1, 1, 0, 1);
-	Models::Teapot* teapot = new Models::Teapot();
-	bazookaM = glm::translate(M, glm::vec3(0.18f, 0.35f, 0.0f));
-	bazookaM = glm::scale(bazookaM, glm::vec3(0.3f, 0.3f, 0.3f));
-	bazookaM = glm::rotate(bazookaM, (float)0.5 * PI, glm::vec3(0.0f, -1.0f, 0.0f));
-	bazookaM = glm::rotate(bazookaM, angle1, glm::vec3(0.0f, 0.0f, 1.0f));
+	M = glm::translate(snailM, glm::vec3(0.3f, 0.3f, 0.0f));
+	M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f));
+	M = glm::rotate(M, (float)0.5 * PI, glm::vec3(1.0f, 0.0f, 0.0f));
+	M = glm::rotate(M, angle_conversed, glm::vec3(-1.0f, 0.0f, 0.0f));
 
-	glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(bazookaM));
-	glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(camera->getP()));
-	glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(camera->getV()));
+	// draw
+	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));
+	drawTextured(r, g, b);
 
-	Models::teapot.drawSolid(); //Draw model
+	if (!shooting) {
+		bullet->translateOfM(M);
+		bullet->drawBullet( 0.0f, 0.0f, angl, r, g, b);
+	}
 }
 
-Bazooka::~Bazooka()
-{
+glm::mat4 Bazooka::getM() {
+	return M;
+}
+
+void Bazooka::startShooting() {
+	shooting = true;
+	shootedM = M;
+
+}
+
+void Bazooka::moveBullet(float x, float y, int angle, double r, double g, double b) {
+	//printf("BAZO %d\n", bullet->getExplosion());
+	if (bullet->getExplosion()) {
+		bullet->drawExplosion();
+
+	}
+	bullet->drawBullet(x, y, angle, r, g, b);
+}
+
+float Bazooka::getAngle() {
+	return angle;
+}
+
+Bullet* Bazooka::getBullet() {
+	return bullet;
+}
+
+void Bazooka::translateBazooka(float x, float y) {
+	M = glm::translate(M, glm::vec3(x, 0.0f, y));
+	M = glm::translate(M, glm::vec3(0.3f, 0.3f, 0.0f));
+	M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f));
+}
+
+void Bazooka::endShooting() {
+	shooting = false;
 }
