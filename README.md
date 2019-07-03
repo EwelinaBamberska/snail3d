@@ -1,6 +1,6 @@
 # Snail3d
 
-:snail: A version of the 3D Worms game creared with OpenGL and Blender. Worms are replaced with snails. Models used in game are made with Blender.
+:snail: A version of the 3D Worms game created with OpenGL and Blender. Worms are replaced with snails. Models used in game are made with Blender.
 
 
 Snails can move on the mountainous terrain and shoot to others. They're controlled by keyboard. 
