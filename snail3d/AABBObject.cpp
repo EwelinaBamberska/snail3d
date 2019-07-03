@@ -6,11 +6,6 @@ AABBObject::AABBObject()
 }
 
 bool AABBObject::check_if_collision(AABBObject* object) {
-	//printf("Snail: x  %f y %f z %f\n", object->getmins()[0], object->getmins()[1], object->getmins()[2]);
-	//printf("BULLET: x %f y %f z %f\n", mins[0], mins[1], mins[2]);
-	/*if (mins[0] <= object->getmaxes()[0] && maxes[0] >= object->getmins()[0]) printf("X sie mieszcza\n");
-	if (mins[1] <= object->getmaxes()[1] && maxes[1] >= object->getmins()[1]) printf("Y te�\n");
-	if (mins[2] <= object->getmaxes()[2] && maxes[2] >= object->getmins()[2]) printf("Z\n");*/
 	if (mins[0] <= object->getmaxes()[0] && maxes[0] >= object->getmins()[0] &&
 		mins[1] <= object->getmaxes()[1] && maxes[1] >= object->getmins()[1] &&
 		mins[2] <= object->getmaxes()[2] && maxes[2] >= object->getmins()[2])
@@ -71,7 +66,6 @@ void AABBObject::move(float x, float y, float z) {
 	pmaxes[1] = maxes[1] = y + maxy;
 	pmins[2] = mins[2] = z + minz;
 	pmaxes[2] = maxes[2] = z + maxz;
-	//printf("X min %f max %f Y min %f max %f Z min %f max %f\n", mins[0], maxes[0], mins[1], maxes[1], mins[2], maxes[2]);
 }
 
 void AABBObject::moveOn(float x, float y, float z) {
@@ -81,8 +75,6 @@ void AABBObject::moveOn(float x, float y, float z) {
 	maxes[1] += y;
 	mins[2] += z;
 	maxes[2] += z;
-	//printf("X min %f max %f Y min %f max %f Z min %f max %f\n", mins[0], maxes[0], mins[1], maxes[1], mins[2], maxes[2]);
-
 }
 
 void AABBObject::setprevious() {

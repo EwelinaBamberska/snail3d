@@ -1,11 +1,6 @@
 #include "Bullet.h"
 
 Bullet::Bullet(GLuint t, char* objFileName, ShaderProgram *sp) : DrawableElement(t, objFileName, sp) {
-	//setBoxes();
-	/*aabb->setmaxes(aabb->getmaxes()[0] * 0.5f, aabb->getmaxes()[1] * 0.5f, aabb->getmaxes()[2] * 0.5f);
-	aabb->setmins(aabb->getmins()[0] * 0.5f, aabb->getmins()[1] * 0.5f, aabb->getmins()[2] * 0.5f);
-	aabb->move(-0.05f * 0.5f, 1.2f * 0.5f, 0.0f);
-	previousy = previousx = 0.0f;*/
 	char name[] = "models/explosion.obj";
 	expl = new ExplosionEffect(t, name, sp);
 	resetBullet(glm::mat4(1.0f));
@@ -16,7 +11,7 @@ Bullet::Bullet(GLuint t, char* objFileName, ShaderProgram *sp) : DrawableElement
 }
 
 void Bullet::countScaling() {
-	scaling += sqrt(sqrt(1.0f + ((timeOfExplosion * 2.0f) / 100.0f)));//(5.0f - (5.0f - timeOfExplosion / 2));
+	scaling += sqrt(sqrt(1.0f + ((timeOfExplosion * 2.0f) / 100.0f)));
 }
 
 void Bullet::resetBullet(glm::mat4 bazookaM) {
@@ -37,15 +32,11 @@ void Bullet::resetBullet(glm::mat4 bazookaM) {
 void Bullet::drawExplosion() {
 	countScaling();
 	expl->draw(M, scaling);
-	//M = glm::scale(M, glm::vec3(scaling, scaling, scaling));
-	////printf("SCALING %f\n", scaling);
 	timeOfExplosion += 0.01f;
 	if (timeOfExplosion > 5.0f) {
 		explosion = false;
 	}
 }
-
-//void Bullet::drawBullet(glm::mat4 bazookaM, float x, float y, int angle) { }
 
 void Bullet::translateOfM(glm::mat4 snailM) {
 	M = snailM;
@@ -56,14 +47,6 @@ void Bullet::translateOfM(glm::mat4 snailM) {
 void Bullet::drawBullet(float x, float y, int angle, double r, double g, double b) {
 
 	M = glm::translate(M, glm::vec3(0.0f, (y - previousy) , (x - previousx)));
-	//printf("%f, %f\n", x, y);
-
-	// draw shooted bullet
-	//printf("BULLET X min %f max %F\t Y min %f max %f\t Z min %f max %f\n", aabb->getmins()[0], aabb->getmaxes()[0], aabb->getmins()[1], aabb->getmaxes()[1], aabb->getmins()[2], aabb->getmaxes()[2]);
-	/*if (aabb->getChanged()) {
-		aabb->setprevious();
-		aabb->setChanged(false);
-	}*/
 	if ((y - previousy) * 0.5f * 0.2f < 0.0f) droping = true;
 	else droping = false;
 	if(angle == 0)
@@ -79,7 +62,6 @@ void Bullet::drawBullet(float x, float y, int angle, double r, double g, double 
 	}
 	lastymax = aabb->getmaxes()[1];
 	lastymin = aabb->getmins()[1];
-	//printf("Previous %f x %f Roznica %f\n", previousx, x, x - previousx);
 	previousx = x;
 	previousy = y;
 	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(M));

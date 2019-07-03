@@ -6,7 +6,6 @@ Bazooka::Bazooka(GLuint bazookaT, GLuint bulletT, char * objFileName, ShaderProg
 	char name[] = "models/bullet.obj";
 	bullet = new Bullet(bulletT, name, sp);
 	bullet->resetBullet(M);
-	//bullet->setBoxes();
 	shooting = false;
 }
 
@@ -44,10 +43,8 @@ void Bazooka::startShooting() {
 }
 
 void Bazooka::moveBullet(float x, float y, int angle, double r, double g, double b) {
-	//printf("BAZO %d\n", bullet->getExplosion());
 	if (bullet->getExplosion()) {
 		bullet->drawExplosion();
-
 	}
 	else
 		bullet->drawBullet(x, y, angle, r, g, b);

@@ -45,7 +45,7 @@ public:
 	float getAngle();
 
 	void shootBullet(float strength);
-	void countShootingTrajectory(double r, double g, double b); // to do
+	void countShootingTrajectory(double r, double g, double b); 
 	Bazooka* getBazooka();
 	bool getShooting();
 	void loseLife();
@@ -89,12 +89,9 @@ private:
 	float lastY;
 	Mountain* mountain;
 
-
-
 	float flashTime;
 	float initialFlashTime;
 	bool stop = false;
-
 	float wind;
 };
 

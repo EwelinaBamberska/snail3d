@@ -29,7 +29,6 @@ public:
 	float getAngle();
 	void startShooting();
 	Bullet* getBullet();
-	//void drawExplosion();
 
 private:
 	float angle;

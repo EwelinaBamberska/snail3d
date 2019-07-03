@@ -48,7 +48,6 @@ int numberOfSnails = 5;
 bool strengthReleased = false;
 bool shooting = false;
 
-//ShaderProgram *spLambert;
 ShaderProgram* sp;
 
 
@@ -69,13 +68,11 @@ void error_callback(int error, const char* description) {
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (action == GLFW_PRESS) {
-		//if (key == GLFW_KEY_A) speed_x = -PI;
-		//if (key == GLFW_KEY_D) speed_x = PI;
 		if (key == GLFW_KEY_W) speed_y = PI / 2;
 		if (key == GLFW_KEY_S) speed_y = -PI / 2;
 		if (key == GLFW_KEY_UP) speed_up = PI;
 		if (key == GLFW_KEY_DOWN) speed_up = -PI;
-		if (!shooting && key == GLFW_KEY_SPACE) strength = 0.4;
+		if (key == GLFW_KEY_SPACE) strength = 0.4;
 	}
 	if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_A) speed_x = 1;
@@ -84,7 +81,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		if (key == GLFW_KEY_S) speed_y = 0;
 		if (key == GLFW_KEY_UP) speed_up = 0;
 		if (key == GLFW_KEY_DOWN) speed_up = 0;
-		if (!shooting && key == GLFW_KEY_SPACE) {
+		if (key == GLFW_KEY_SPACE) {
 			strength = 0;
 			strengthReleased = true;
 		}		
@@ -97,8 +94,6 @@ void windowResizeCallback(GLFWwindow* window, int width, int height) {
 	aspectRatio = (float)width / (float)height;
 	glViewport(0, 0, width, height);
 }
-
-
 
 //Funkcja wczytuj�ca tekstur�
 GLuint readTexture(const char* filename) {
@@ -125,7 +120,6 @@ GLuint readTexture(const char* filename) {
 }
 
 void initOpenGLProgram(GLFWwindow* window) {
-	//initShaders();
 	glClearColor(0, 0, 0, 1);
 	glEnable(GL_DEPTH_TEST);
 	glfwSetWindowSizeCallback(window, windowResizeCallback);
@@ -143,8 +137,6 @@ void initOpenGLProgram(GLFWwindow* window) {
 
 //Release resources allocated by the program
 void freeOpenGLProgram(GLFWwindow* window) {
-	//freeShaders();
-
 	glDeleteTextures(1, &bazookaTex);
 	glDeleteTextures(1, &bulletTex);
 	glDeleteTextures(1, &snailTex);
@@ -152,7 +144,6 @@ void freeOpenGLProgram(GLFWwindow* window) {
 	glDeleteTextures(1, &blueTex);
 	glDeleteTextures(1, &redTex);
 	delete sp;
-
 }
 
 int getActiveSnailIndex(std::vector<Snail*> snails) {
@@ -176,7 +167,7 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 		}
 	}
 
-	// narysuj gure
+	// narysuj górę
 	mountain->drawMountain(rgb.r, rgb.g, rgb.b);
 
 	int active = getActiveSnailIndex(snails);
@@ -206,31 +197,20 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 				speed_x = 0;
 
 				snails[i]->moveSnail(speed_y * 0.005);
-				//if (speed_y) {
-				//	//obliczanie y
 				float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle(), snails[i]->getLasty());
 				float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle(), snails[i]->getLasty());
-				//printf("%f %f\n", translateY1, translateY2);
-				//snails[i]->setYPos((translateY1 + translateY2) / 2);
 				float max = translateY1 > translateY2 ? translateY1 : translateY2;
 				snails[i]->getaabb()->sety(max);
 				snails[i]->getBazooka()->getBullet()->getaabb()->setyforBullet(snails[i]->getLasty() - max);
 				snails[i]->setLastY(max);
 
-				//}
 				if (snails[i]->getShooting() && !snails[i]->getBazooka()->getBullet()->getExplosion()) {
 					for (int j = 0; j < snails.size(); j++) {
-						//printf("%d X min %f max %f, \t Z min %f max %f\n",j, snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getaabb()->getmaxes()[2]);
-						//printf("SPRAWDZA\n");
 						if (i != j && snails[j]->getIfLive() && snails[i]->getBazooka()->getBullet()->getaabb()->check_if_collision(snails[j]->getaabb())) {
 							snails[j]->loseLife();
-							//printf("%d X min %f max %f, \t Z min %f max %f\n", j, snails[j]->getaabb()->getmins()[0], snails[j]->getaabb()->getmaxes()[0], snails[j]->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
-							//printf("bullet %d X min %f max %f, \t Z min %f max %f\n", j, snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmaxes()[0], snails[j]->getBazooka()->getBullet()->getaabb()->getmins()[2], snails[j]->getaabb()->getmaxes()[2]);
 							snails[i]->getBazooka()->getBullet()->setExplosion();
-							//printf("%d\n", snails[i]->getBazooka()->getBullet()->getExplosion());
-							//printf("KOLIZJA Z %d\n", j);
 							snails[i]->setShooting();	
-							shooting = false;//changeActiveSnail = true;
+							shooting = false;
 							break;
 						}
 					}
@@ -243,8 +223,6 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 					snails[i]->setShooting();
 					snails[i]->setStop();
 					shooting = false;
-					//printf("KONIEC\n");
-					//changeActiveSnail = true;
 				}
 			}
 		}
@@ -252,7 +230,6 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 	
 	// narysuj pasek sily
 	if (strength) {
-		//printf("TUTAJ\n");
 		bar->draw(strength);
 	}
 	else {
@@ -263,6 +240,7 @@ void drawScene(GLFWwindow* window, StrengthBar* bar, Mountain* mountain, std::ve
 		}
 		strength = 0;
 		bar->setLength(0);
+
 	}
 	glfwSwapBuffers(window); //Przerzu� tylny bufor na przedni
 }
@@ -279,7 +257,7 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	window = glfwCreateWindow(500, 500, "OpenGL", NULL, NULL);  //Utw�rz okno 500x500 o tytule "OpenGL" i kontekst OpenGL.
+	window = glfwCreateWindow(1000, 1000, "OpenGL", NULL, NULL);  //Utw�rz okno 500x500 o tytule "OpenGL" i kontekst OpenGL.
 
 	if (!window) //Je�eli okna nie uda�o si� utworzy�, to zamknij program
 	{
@@ -321,15 +299,13 @@ int main(void)
 
 		float translateY1 = mountain->getYPosition(snails[i]->getaabb()->getmaxes()[0], snails[i]->getaabb()->getmaxes()[2], snails[i]->getAngle(), snails[i]->getLasty());
 		float translateY2 = mountain->getYPosition(snails[i]->getaabb()->getmins()[0], snails[i]->getaabb()->getmins()[2], snails[i]->getAngle(), snails[i]->getLasty());
-		//snails[i]->setYPos((translateY1 + translateY2) / 2);
 		snails[i]->getaabb()->sety((translateY1 + translateY2) / 2);
 		snails[i]->setLastY((translateY1 + translateY2) / 2);
 	}
 
 	snails[0]->setTurn(true);
-	//Snail* snail = new Snail(camera, snailName, snailTex, bazookaTex, bulletTex, true);//, spLambert);
 	char barName[] = "models/strengthbar.obj";
-	StrengthBar* strenghBar = new StrengthBar(camera, sp, redTex, barName);
+	StrengthBar* strenghBar = new StrengthBar(redTex, barName, sp);
 
 	while (!glfwWindowShouldClose(window)) //Tak d�ugo jak okno nie powinno zosta� zamkni�te
 	{
